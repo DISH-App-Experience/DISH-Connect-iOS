@@ -1,0 +1,6 @@
+framework module Pods_DISH_ConnectTests {
+  umbrella header "Pods-DISH ConnectTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

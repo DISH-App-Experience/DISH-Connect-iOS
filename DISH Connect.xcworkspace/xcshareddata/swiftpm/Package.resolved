@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "KVKCalendar",
+        "repositoryURL": "https://github.com/kvyatkovskys/KVKCalendar.git",
+        "state": {
+          "branch": null,
+          "revision": "c93211dd9e724d41a9e0c86741e40729b98c76be",
+          "version": "0.5.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
