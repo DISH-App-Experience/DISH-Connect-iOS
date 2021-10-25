@@ -23,6 +23,8 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
     
     var categories = [Category]()
     
+    var items = [MenuItem]()
+    
     var selectedCategory : Category?
     
     var action : String? {
@@ -292,8 +294,32 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
         removeButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
     }
     
+    private func checkItems(withImageString imageString: String, key: String, isNew: Bool) {
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        items.removeAll()
+        Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").observe(DataEventType.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let item = MenuItem()
+                item.title = value["title"] as? String
+                item.desc = value["description"] as? String
+                item.price = value["price"] as? Double
+                item.category = value["category"] as? String
+                item.image = value["image"] as? String
+                item.timeStamp = value["time"] as? Int
+                item.key = value["key"] as? String ?? snapshot.key
+                self.items.append(item)
+            }
+            DispatchQueue.main.async {
+                self.continueCompletion(withImageString: imageString, key: key, isNew: isNew)
+                MBProgressHUD.hide(for: self.view, animated: true)
+            }
+        }
+    }
+    
     private func continueCompletion(withImageString imageString: String, key: String, isNew: Bool) {
         MBProgressHUD.showAdded(to: self.view, animated: true)
+        // get a new
+        let itemsCount = items.count + 1
         if isNew {
             let values : [String : Any] = [
                 "key" : key,
@@ -303,7 +329,8 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                 "category" : String(self.selectedCategory!.key!),
                 "time" : Int(Date().timeIntervalSince1970),
                 "scanPrice" : Int(self.scanPriceTF.text!)!,
-                "image" : imageString
+                "image" : imageString,
+                "listOrder" : itemsCount
             ]
             uploadNew(withValues: values, key: key)
         } else {
@@ -318,7 +345,8 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                         "category" : String(self.selectedCategory?.key ?? string),
                         "time" : Int(Date().timeIntervalSince1970),
                         "scanPrice" : Int(self.scanPriceTF.text!)!,
-                        "image" : imageString
+                        "image" : imageString,
+                        "listOrder" : itemsCount
                     ]
                     self.uploadExisting(withValues: values, key: self.menuItemId!)
                 }
@@ -379,7 +407,7 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                     if putDataError == nil && storageMetadata != nil {
                         storageProfileRef.downloadURL { (url, downloadUrlError) in
                             if let metalImageUrl = url?.absoluteString {
-                                self.continueCompletion(withImageString: metalImageUrl, key: key!, isNew: false)
+                                self.checkItems(withImageString: metalImageUrl, key: key!, isNew: false)
                             } else {
                                 MBProgressHUD.hide(for: self.view, animated: true)
                                 self.simpleAlert(title: "Error", message: downloadUrlError!.localizedDescription)
@@ -409,7 +437,7 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                         if putDataError == nil && storageMetadata != nil {
                             storageProfileRef.downloadURL { (url, downloadUrlError) in
                                 if let metalImageUrl = url?.absoluteString {
-                                    self.continueCompletion(withImageString: metalImageUrl, key: key!, isNew: true)
+                                    self.checkItems(withImageString: metalImageUrl, key: key!, isNew: true)
                                 } else {
                                     MBProgressHUD.hide(for: self.view, animated: true)
                                     self.simpleAlert(title: "Error", message: downloadUrlError!.localizedDescription)

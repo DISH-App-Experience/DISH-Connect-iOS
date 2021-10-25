@@ -10,11 +10,21 @@ import Firebase
 import MBProgressHUD
 import JJFloatingActionButton
 
-class ActionController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+class ActionController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    // MARK: - Constants
+    
+    let pickerView = UIPickerView()
+    
+    let categories = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
     
     // MARK: - Variables
     
     var features = [String]()
+    
+    var selectedRewardsItem : MenuItem?
+    
+    var items = [MenuItem]()
     
     var control : UISegmentedControl?
     
@@ -143,12 +153,6 @@ class ActionController: UIViewController, UITableViewDelegate, UITableViewDataSo
         return textField
     }()
     
-    let rewardItemPrice : MainTextField = {
-        let textField = MainTextField(placeholderString: "Reward Item Scan Price")
-        textField.keyboardType = UIKeyboardType.numberPad
-        return textField
-    }()
-    
     let allowOnlyScanOrder : UILabel = {
         let label = UILabel()
         label.textColor = UIColor.label
@@ -264,6 +268,7 @@ class ActionController: UIViewController, UITableViewDelegate, UITableViewDataSo
             if let value = snapshot.value as? Bool {
                 if value {
                     self.features.append("Rewards")
+                    self.checkItems()
                     self.checkRewardHistory()
                     self.rewardsBackend()
                     // create segmented control
@@ -393,6 +398,9 @@ class ActionController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     private func setupRewardsView() {
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        
         view.addSubview(rewardsView)
         rewardsView.topAnchor.constraint(equalTo: control!.bottomAnchor, constant: 15).isActive = true
         rewardsView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
@@ -413,6 +421,7 @@ class ActionController: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         rewardsView.addSubview(rewardItemNameTF)
         rewardItemNameTF.delegate = self
+        rewardItemNameTF.inputView = pickerView
         rewardItemNameTF.topAnchor.constraint(equalTo: rewardsImageView.topAnchor).isActive = true
         rewardItemNameTF.heightAnchor.constraint(equalToConstant: 44).isActive = true
         rewardItemNameTF.leftAnchor.constraint(equalTo: rewardsImageView.rightAnchor, constant: 16).isActive = true
@@ -425,15 +434,8 @@ class ActionController: UIViewController, UITableViewDelegate, UITableViewDataSo
         rewardItemNameTF.leftAnchor.constraint(equalTo: rewardsImageView.rightAnchor, constant: 16).isActive = true
         rewardItemNameTF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         
-        rewardsView.addSubview(rewardItemPrice)
-        rewardItemPrice.delegate = self
-        rewardItemPrice.topAnchor.constraint(equalTo: rewardItemNameTF.bottomAnchor, constant: 16).isActive = true
-        rewardItemPrice.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        rewardItemPrice.leftAnchor.constraint(equalTo: rewardsImageView.rightAnchor, constant: 16).isActive = true
-        rewardItemPrice.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        
         rewardsView.addSubview(orderScanSwitch)
-        orderScanSwitch.topAnchor.constraint(equalTo: rewardItemPrice.bottomAnchor, constant: 16).isActive = true
+        orderScanSwitch.topAnchor.constraint(equalTo: rewardItemNameTF.bottomAnchor, constant: 60).isActive = true
         orderScanSwitch.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         orderScanSwitch.widthAnchor.constraint(equalToConstant: 51).isActive = true
         orderScanSwitch.heightAnchor.constraint(equalToConstant: 31).isActive = true
@@ -518,42 +520,6 @@ class ActionController: UIViewController, UITableViewDelegate, UITableViewDataSo
         view.bringSubviewToFront(fab!)
     }
     
-    // MARK: - Objective-C Functions
-    
-    @objc func segmentControlTapped(_ segmentedControl: UISegmentedControl) {
-        if features[segmentedControl.selectedSegmentIndex] == "Rewards" {
-            navigationItem.rightBarButtonItem = nil
-            saveBBI = UIBarButtonItem(title: "Save", style: UIBarButtonItem.Style.done, target: self, action: #selector(self.saveInformmation))
-            navigationItem.rightBarButtonItem = saveBBI
-        } else {
-            navigationItem.rightBarButtonItem = nil
-        }
-        
-        switch segmentedControl.selectedSegmentIndex {
-        case 0:
-            showView(withName: features[0])
-            print("selected 0: \(features[segmentedControl.selectedSegmentIndex])")
-        case 1:
-            showView(withName: features[1])
-            print("selected 1: \(features[segmentedControl.selectedSegmentIndex])")
-        case 2:
-            showView(withName: features[2])
-            print("selected 2: \(features[segmentedControl.selectedSegmentIndex])")
-        default:
-            print("selected default")
-        }
-    }
-    
-    @objc func saveInformmation() {
-        Database.database().reference().child("Apps").child(globalAppId).child("rewards").child("rewardTitle").setValue(rewardItemNameTF.text!)
-        
-        Database.database().reference().child("Apps").child(globalAppId).child("rewards").child("rewardValue").setValue(Int(self.rewardItemPrice.text!)!)
-        
-        Database.database().reference().child("Apps").child(globalAppId).child("rewards").child("allowCheckoutWithScanOnly").setValue(Bool(self.orderScanSwitch.isOn))
-        
-        simpleAlert(title: "Success", message: "Information successfully saved!")
-    }
-    
     private func checkEvents() {
         eventsList.removeAll()
         let production = Database.database().reference().child("Apps").child(globalAppId).child("events")
@@ -618,19 +584,15 @@ class ActionController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     private func rewardsBackend() {
-        Database.database().reference().child("Apps").child(globalAppId).child("rewards").child("rewardTitle").observe(DataEventType.value) { snapshot in
+        Database.database().reference().child("Apps").child(globalAppId).child("rewards").child("rewardId").observe(DataEventType.value) { snapshot in
             if let value = snapshot.value as? String {
-                self.rewardItemNameTF.text = "\(value)"
+                for item in self.items {
+                    if item.key == value {
+                        self.rewardItemNameTF.text = item.title!
+                    }
+                }
             } else {
-                self.rewardItemNameTF.text = "Bacon Burger"
-            }
-        }
-        
-        Database.database().reference().child("Apps").child(globalAppId).child("rewards").child("rewardValue").observe(DataEventType.value) { snapshot in
-            if let value = snapshot.value as? Int {
-                self.rewardItemPrice.text = "\(value)"
-            } else {
-                self.rewardItemPrice.text = "10"
+                self.rewardItemNameTF.text = "Choose Reward Here!"
             }
         }
         
@@ -669,6 +631,67 @@ class ActionController: UIViewController, UITableViewDelegate, UITableViewDataSo
         UIView.animate(withDuration: 0.5) {
             self.promosTableView.alpha = 0
         }
+    }
+    
+    private func checkItems() {
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        items.removeAll()
+        Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").observe(DataEventType.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let item = MenuItem()
+                item.title = value["title"] as? String
+                item.desc = value["description"] as? String
+                item.price = value["price"] as? Double
+                item.category = value["category"] as? String
+                item.image = value["image"] as? String
+                item.timeStamp = value["time"] as? Int
+                item.key = value["key"] as? String ?? snapshot.key
+                self.items.append(item)
+            }
+            DispatchQueue.main.async {
+                let sortedList = self.items.sorted(by: { $1.timeStamp! < $0.timeStamp! } )
+                self.items.removeAll()
+                self.items = sortedList
+                self.pickerView.reloadInputViews()
+                self.pickerView.reloadAllComponents()
+                MBProgressHUD.hide(for: self.view, animated: true)
+            }
+        }
+        MBProgressHUD.hide(for: self.view, animated: true)
+    }
+    
+    // MARK: - Objective-C Functions
+    
+    @objc func segmentControlTapped(_ segmentedControl: UISegmentedControl) {
+        if features[segmentedControl.selectedSegmentIndex] == "Rewards" {
+            navigationItem.rightBarButtonItem = nil
+            saveBBI = UIBarButtonItem(title: "Save", style: UIBarButtonItem.Style.done, target: self, action: #selector(self.saveInformmation))
+            navigationItem.rightBarButtonItem = saveBBI
+        } else {
+            navigationItem.rightBarButtonItem = nil
+        }
+        
+        switch segmentedControl.selectedSegmentIndex {
+        case 0:
+            showView(withName: features[0])
+            print("selected 0: \(features[segmentedControl.selectedSegmentIndex])")
+        case 1:
+            showView(withName: features[1])
+            print("selected 1: \(features[segmentedControl.selectedSegmentIndex])")
+        case 2:
+            showView(withName: features[2])
+            print("selected 2: \(features[segmentedControl.selectedSegmentIndex])")
+        default:
+            print("selected default")
+        }
+    }
+    
+    @objc func saveInformmation() {
+        Database.database().reference().child("Apps").child(globalAppId).child("rewards").child("rewardId").setValue(selectedRewardsItem!.key!)
+        
+        Database.database().reference().child("Apps").child(globalAppId).child("rewards").child("allowCheckoutWithScanOnly").setValue(Bool(self.orderScanSwitch.isOn))
+        
+        simpleAlert(title: "Success", message: "Information successfully saved!")
     }
     
     // MARK: - UITableView Delegation
@@ -780,6 +803,25 @@ class ActionController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    // MARK: - UIPickerView Delegation
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return items.count
+    }
+
+    func pickerView( _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return items[row].title!
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        selectedRewardsItem = items[row]
+        rewardItemNameTF.text = items[row].title!
     }
     
 }

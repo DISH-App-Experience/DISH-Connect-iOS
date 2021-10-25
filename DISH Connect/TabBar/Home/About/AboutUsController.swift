@@ -45,6 +45,24 @@ class AboutUsController: UIViewController, UITextViewDelegate, UITextFieldDelega
         return textField
     }()
     
+    let twitterLink : MainTextField = {
+        let textField = MainTextField(placeholderString: "Twitter URL")
+        textField.keyboardType = UIKeyboardType.default
+        return textField
+    }()
+    
+    let instagramLink : MainTextField = {
+        let textField = MainTextField(placeholderString: "Instagram URL")
+        textField.keyboardType = UIKeyboardType.default
+        return textField
+    }()
+    
+    let facebookLink : MainTextField = {
+        let textField = MainTextField(placeholderString: "Facebook URL")
+        textField.keyboardType = UIKeyboardType.default
+        return textField
+    }()
+    
     let mainButton : MainButton = {
         let button = MainButton(title: "Save")
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -93,11 +111,11 @@ class AboutUsController: UIViewController, UITextViewDelegate, UITextFieldDelega
     
     private func constraints() {
         view.addSubview(scrollView)
-        scrollView.contentSize = CGSize(width: view.frame.width - 50, height: 900)
+        scrollView.contentSize = CGSize(width: view.frame.width - 50, height: 1000)
         scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         scrollView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         scrollView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
         scrollView.addSubview(textView)
         textView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20).isActive = true
@@ -117,11 +135,29 @@ class AboutUsController: UIViewController, UITextViewDelegate, UITextFieldDelega
         phoneNumber.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -25).isActive = true
         phoneNumber.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
+        scrollView.addSubview(twitterLink)
+        twitterLink.topAnchor.constraint(equalTo: phoneNumber.bottomAnchor, constant: 19).isActive = true
+        twitterLink.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 25).isActive = true
+        twitterLink.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -25).isActive = true
+        twitterLink.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        scrollView.addSubview(instagramLink)
+        instagramLink.topAnchor.constraint(equalTo: twitterLink.bottomAnchor, constant: 19).isActive = true
+        instagramLink.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 25).isActive = true
+        instagramLink.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -25).isActive = true
+        instagramLink.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        scrollView.addSubview(facebookLink)
+        facebookLink.topAnchor.constraint(equalTo: instagramLink.bottomAnchor, constant: 19).isActive = true
+        facebookLink.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 25).isActive = true
+        facebookLink.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -25).isActive = true
+        facebookLink.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
         scrollView.addSubview(mainButton)
         mainButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         mainButton.leftAnchor.constraint(equalTo: phoneNumber.leftAnchor).isActive = true
         mainButton.rightAnchor.constraint(equalTo: phoneNumber.rightAnchor).isActive = true
-        mainButton.topAnchor.constraint(equalTo: phoneNumber.bottomAnchor, constant: 60).isActive = true
+        mainButton.topAnchor.constraint(equalTo: facebookLink.bottomAnchor, constant: 19).isActive = true
     }
     
     private func backend() {
@@ -140,6 +176,30 @@ class AboutUsController: UIViewController, UITextViewDelegate, UITextFieldDelega
             if let value = snapshot.value as? String {
                 if value != "nil" {
                     self.websiteLink.text = value
+                }
+            }
+        }
+        
+        Database.database().reference().child("Apps").child(globalAppId).child("about").child("twitterLink").observe(DataEventType.value) { (snapshot) in
+            if let value = snapshot.value as? String {
+                if value != "nil" {
+                    self.twitterLink.text = value
+                }
+            }
+        }
+        
+        Database.database().reference().child("Apps").child(globalAppId).child("about").child("instagramLink").observe(DataEventType.value) { (snapshot) in
+            if let value = snapshot.value as? String {
+                if value != "nil" {
+                    self.instagramLink.text = value
+                }
+            }
+        }
+        
+        Database.database().reference().child("Apps").child(globalAppId).child("about").child("facebookLink").observe(DataEventType.value) { (snapshot) in
+            if let value = snapshot.value as? String {
+                if value != "nil" {
+                    self.facebookLink.text = value
                 }
             }
         }
@@ -164,6 +224,9 @@ class AboutUsController: UIViewController, UITextViewDelegate, UITextFieldDelega
         textView.delegate = self
         websiteLink.delegate = self
         phoneNumber.delegate = self
+        twitterLink.delegate = self
+        instagramLink.delegate = self
+        facebookLink.delegate = self
     }
     
     // MARK: - Objective-C Functions
@@ -172,6 +235,9 @@ class AboutUsController: UIViewController, UITextViewDelegate, UITextFieldDelega
         textView.resignFirstResponder()
         phoneNumber.resignFirstResponder()
         websiteLink.resignFirstResponder()
+        twitterLink.resignFirstResponder()
+        instagramLink.resignFirstResponder()
+        facebookLink.resignFirstResponder()
 
         MBProgressHUD.showAdded(to: view, animated: true)
 
@@ -181,6 +247,18 @@ class AboutUsController: UIViewController, UITextViewDelegate, UITextFieldDelega
 
         if websiteLink.text != "" {
             Database.database().reference().child("Apps").child(globalAppId).child("about").child("websiteLink").setValue(websiteLink.text!)
+        }
+        
+        if twitterLink.text != "" {
+            Database.database().reference().child("Apps").child(globalAppId).child("about").child("twitterLink").setValue(twitterLink.text!)
+        }
+        
+        if instagramLink.text != "" {
+            Database.database().reference().child("Apps").child(globalAppId).child("about").child("instagramLink").setValue(instagramLink.text!)
+        }
+        
+        if facebookLink.text != "" {
+            Database.database().reference().child("Apps").child(globalAppId).child("about").child("facebookLink").setValue(facebookLink.text!)
         }
 
         if phoneNumber.text != "" {

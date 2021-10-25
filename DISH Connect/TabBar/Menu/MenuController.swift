@@ -32,6 +32,8 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     var categoryCollectionView : UICollectionView?
     
+    var barItem : UIBarButtonItem?
+    
     // MARK: - View Objects
     
     let contentView : UIView = {
@@ -104,8 +106,11 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.tintColor = UIColor.mainBlue
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.largeTitleDisplayMode = UINavigationItem.LargeTitleDisplayMode.always
         
+        barItem = UIBarButtonItem(title: "Rearrange", style: UIBarButtonItem.Style.done, target: self, action: #selector(editOrderButtonPressed))
+        
+        navigationItem.largeTitleDisplayMode = UINavigationItem.LargeTitleDisplayMode.always
+        navigationItem.rightBarButtonItem = barItem
         navigationItem.backButtonTitle = "Back"
         navigationItem.title = "Menu"
     }
@@ -204,6 +209,7 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
                 item.desc = value["description"] as? String
                 item.price = value["price"] as? Double
                 item.category = value["category"] as? String
+                item.listorder = value["listOrder"] as? Int
                 item.image = value["image"] as? String
                 item.timeStamp = value["time"] as? Int
                 item.key = value["key"] as? String ?? snapshot.key
@@ -217,7 +223,6 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
                 MBProgressHUD.hide(for: self.view, animated: true)
             }
         }
-        MBProgressHUD.hide(for: self.view, animated: true)
     }
     
     private func addEditButton() {
@@ -268,6 +273,17 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
         controller.action = "GET"
         controller.categoryId = chosenCategoryBig?.key!
         self.navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    @objc func editOrderButtonPressed() {
+        tableView.isEditing = !tableView.isEditing
+        
+        switch tableView.isEditing {
+        case true:
+            barItem?.title = "Done"
+        case false:
+            barItem?.title = "Rearrange"
+        }
     }
     
     // MARK: - UICollectionView Delegate & Data Source Functions
@@ -411,6 +427,29 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
             
             return cell
         }
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let item = items[sourceIndexPath.row]
+        let startIndex = sourceIndexPath.row
+        let endIndex = destinationIndexPath.row
+        let difference = (startIndex - endIndex)
+        
+        items.remove(at: startIndex)
+        items.insert(item, at: endIndex)
+        
+//        for item in items {
+//            if item.listorder < XXX {
+////                Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(item.key!).child("listOrder").setValue(item.listorder! - 1)
+//            } else if item.listorder > XXX {
+////                Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(item.key!).child("listOrder").setValue(item.listorder! - 1)
+//            }
+//        }
+//        Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(item.key!).child("listOrder").setValue(destinationIndexPath.row)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
