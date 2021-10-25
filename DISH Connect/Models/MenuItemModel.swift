@@ -16,5 +16,6 @@ class MenuItem: NSObject {
     var image : String?
     var key : String?
     var timeStamp : Int?
+    var listorder : Int?
 
 }
