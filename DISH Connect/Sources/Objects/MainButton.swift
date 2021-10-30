@@ -22,12 +22,18 @@ class MainButton : UIButton {
         
         backgroundColor = UIColor.mainBlue
         
+        addTarget(self, action: #selector(effects), for: UIControl.Event.touchUpInside)
+        
         setTitle(buttonTitle, for: UIControl.State.normal)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         fatalError("error fatal")
+    }
+    
+    @objc func effects() {
+        add3DMotion(withFeedbackStyle: UIImpactFeedbackGenerator.FeedbackStyle.light)
     }
     
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 import MBProgressHUD
+import AppTrackingTransparency
 import Firebase
 
 class SignInController: UIViewController, UITextFieldDelegate {
@@ -84,6 +85,7 @@ class SignInController: UIViewController, UITextFieldDelegate {
         delegates()
         updateViewConstraints()
         autoSignIn()
+        appTracking()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -174,6 +176,26 @@ class SignInController: UIViewController, UITextFieldDelegate {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
             MBProgressHUD.hide(for: self.view, animated: true)
             self.present(controller, animated: true, completion: nil)
+        }
+    }
+    
+    private func appTracking() {
+        ATTrackingManager.requestTrackingAuthorization { status in
+            switch status {
+            case .authorized:
+                print("Authorized")
+            case .denied:
+                print("Denied")
+                ATTrackingManager.requestTrackingAuthorization { anotherStatus in
+                    print("denied again")
+                }
+            case .notDetermined:
+                print("Not Determined")
+            case .restricted:
+                print("Restricted")
+            @unknown default:
+                print("Unknown")
+            }
         }
     }
     

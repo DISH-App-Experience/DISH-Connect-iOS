@@ -17,24 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         
         print("🚀🚀 Launched! 🚀🚀")
         
-        // App Tracking Shit!!
-        if #available(iOS 14, *) {
-            ATTrackingManager.requestTrackingAuthorization { status in
-                switch status {
-                case .authorized:
-                    print("Authorized")
-                case .denied:
-                    print("Denied")
-                case .notDetermined:
-                    print("Not Determined")
-                case .restricted:
-                    print("Restricted")
-                @unknown default:
-                    print("Unknown")
-                }
-            }
-        }
-        
         // Firebase Stuff
         FirebaseApp.configure()
         

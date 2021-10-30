@@ -1145,3 +1145,11 @@ extension MainTextField {
         self.inputAccessoryView = toolBar
     }
 }
+
+
+extension UIButton {
+    func add3DMotion(withFeedbackStyle style: UIImpactFeedbackGenerator.FeedbackStyle) {
+        let generator = UIImpactFeedbackGenerator(style: style)
+        generator.impactOccurred(intensity: 1.0)
+    }
+}

@@ -107,10 +107,10 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
         navigationController?.navigationBar.tintColor = UIColor.mainBlue
         navigationController?.navigationBar.prefersLargeTitles = true
         
-        barItem = UIBarButtonItem(title: "Rearrange", style: UIBarButtonItem.Style.done, target: self, action: #selector(editOrderButtonPressed))
+//        barItem = UIBarButtonItem(title: "Rearrange", style: UIBarButtonItem.Style.done, target: self, action: #selector(editOrderButtonPressed))
         
         navigationItem.largeTitleDisplayMode = UINavigationItem.LargeTitleDisplayMode.always
-        navigationItem.rightBarButtonItem = barItem
+//        navigationItem.rightBarButtonItem = barItem
         navigationItem.backButtonTitle = "Back"
         navigationItem.title = "Menu"
     }
@@ -429,28 +429,28 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
         }
     }
     
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let item = items[sourceIndexPath.row]
-        let startIndex = sourceIndexPath.row
-        let endIndex = destinationIndexPath.row
-        let difference = (startIndex - endIndex)
-        
-        items.remove(at: startIndex)
-        items.insert(item, at: endIndex)
-        
-//        for item in items {
-//            if item.listorder < XXX {
-////                Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(item.key!).child("listOrder").setValue(item.listorder! - 1)
-//            } else if item.listorder > XXX {
-////                Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(item.key!).child("listOrder").setValue(item.listorder! - 1)
-//            }
-//        }
-//        Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(item.key!).child("listOrder").setValue(destinationIndexPath.row)
-    }
+//    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+//        return true
+//    }
+//
+//    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+//        let item = items[sourceIndexPath.row]
+//        let startIndex = sourceIndexPath.row
+//        let endIndex = destinationIndexPath.row
+//        let difference = (startIndex - endIndex)
+//
+//        items.remove(at: startIndex)
+//        items.insert(item, at: endIndex)
+//
+////        for item in items {
+////            if item.listorder < XXX {
+//////                Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(item.key!).child("listOrder").setValue(item.listorder! - 1)
+////            } else if item.listorder > XXX {
+//////                Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(item.key!).child("listOrder").setValue(item.listorder! - 1)
+////            }
+////        }
+////        Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(item.key!).child("listOrder").setValue(destinationIndexPath.row)
+//    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isOutsideAll {
