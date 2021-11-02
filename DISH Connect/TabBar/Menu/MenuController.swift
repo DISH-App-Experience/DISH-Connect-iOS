@@ -177,7 +177,6 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     private func checkCategories() {
-        MBProgressHUD.showAdded(to: self.view, animated: true)
         categories.removeAll()
         let all = Category()
         all.name = "All Items"
@@ -192,6 +191,7 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
                 category.selected = false
                 self.categories.append(category)
             }
+            MBProgressHUD.hide(for: self.view, animated: true)
             DispatchQueue.main.async {
                 self.categoryCollectionView!.reloadData()
             }
@@ -200,7 +200,6 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     private func checkItems() {
-        MBProgressHUD.showAdded(to: self.view, animated: true)
         items.removeAll()
         Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").observe(DataEventType.childAdded) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
@@ -220,7 +219,6 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
                 self.items.removeAll()
                 self.items = sortedList
                 self.tableView.reloadData()
-                MBProgressHUD.hide(for: self.view, animated: true)
             }
         }
     }
@@ -293,6 +291,7 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        MBProgressHUD.hide(for: self.view, animated: true)
         return categories.count
     }
     
@@ -346,18 +345,22 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
             if otherCatItems.count == 0 {
                 print("nil")
                 showNilView()
+                MBProgressHUD.hide(for: self.view, animated: true)
             } else {
                 print("not nil")
                 hideNilView()
+                MBProgressHUD.hide(for: self.view, animated: true)
             }
             return otherCatItems.count
         } else {
             if items.count == 0 {
                 print("nil")
                 showNilView()
+                MBProgressHUD.hide(for: self.view, animated: true)
             } else {
                 print("not nil")
                 hideNilView()
+                MBProgressHUD.hide(for: self.view, animated: true)
             }
             return items.count
         }
