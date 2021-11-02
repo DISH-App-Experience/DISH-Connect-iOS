@@ -7,15 +7,22 @@
 
 import Foundation
 
-struct Customer {
+//struct Customer {
+//    
+//    var name : String
+//    var email : String
+//    var fcm : String?
+//    
+//    init(name: String, email: String) {
+//        self.name = name
+//        self.email = email
+//    }
+//    
+//}
+
+class Customer : NSObject {
     
-    var name : String
-    var email : String
     var fcm : String?
-    
-    init(name: String, email: String) {
-        self.name = name
-        self.email = email
-    }
-    
+    var name : String?
+    var email : String?
 }
