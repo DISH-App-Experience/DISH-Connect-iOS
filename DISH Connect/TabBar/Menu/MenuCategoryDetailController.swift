@@ -164,7 +164,6 @@ class MenuCategoryDetailController: UIViewController, UITextFieldDelegate {
     // MARK: - Objective-C Functions
     
     @objc func mainButtonPressed() {
-        MBProgressHUD.showAdded(to: view, animated: true)
         if action == "GET" {
             Database.database().reference().child("Apps").child(globalAppId).child("menu").child("categories").child(categoryId!).child("name").setValue(self.nameOfCategoryTF.text!)
             MBProgressHUD.hide(for: self.view, animated: true)
