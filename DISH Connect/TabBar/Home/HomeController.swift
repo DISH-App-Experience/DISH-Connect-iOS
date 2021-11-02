@@ -497,10 +497,9 @@ class HomeController: UIViewController {
         self.theme2.text! = String(0)
         Database.database().reference().child("Apps").child(globalAppId).child("Users").observe(.childAdded) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
-                let user = Customer(
-                    name: value["firstName"] as! String,
-                    email: value["email"] as! String
-                )
+                let user = Customer()
+                user.name = value["firstName"] as! String
+                user.email = value["email"] as! String
                 self.users.append(user)
             }
             self.theme2.text! = String(self.users.count)

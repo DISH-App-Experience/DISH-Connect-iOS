@@ -11,6 +11,7 @@ class PushNotificationSender {
     
     func sendPushNotification(to token: String, title: String, body: String) {
         let urlString = "https://fcm.googleapis.com/fcm/send"
+        print("token: \(token)")
         let url = NSURL(string: urlString)!
         let paramString: [String : Any] = ["to" : token,
                                            "priority" : "high",

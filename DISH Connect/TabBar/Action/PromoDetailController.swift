@@ -263,14 +263,14 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
     }
     
     private func completion() {
-        Database.database().reference().child("Apps").child(globalAppId).child("Users").observe(DataEventType.value) { snapshot in
+        Database.database().reference().child("Apps").child(globalAppId).child("Users").observe(DataEventType.childAdded) { snapshot in
             if let value = snapshot.value as? [String : Any] {
-                var user = Customer(name: "Random", email: "Random")
-                user.fcm = value["fcmToken"] as? String ?? "eNO6r2eVWUQNhEA7KmyD-7:APA91bF7DdMsq9Jq0ov4uW3_9nr0wc6zeccZ14UtD3_qNV5y8GPdKaffWzCz-Vo9auckttKvXG-dqoTMOOkGfCQaKgSezsDNmyLX-APsIMsCWUgEgEqUOLWbAdaWLfUUMAEctb_SQrLI"
+                var user = Customer()
+                user.fcm = value["fcmToken"] as? String
                 self.users.append(user)
             }
             for user in self.users {
-                PushNotificationSender().sendPushNotification(to: user.fcm!, title: self.cityTF.text! + "!", body: "Check the 'Promotions' tab in our app to find out more!")
+                PushNotificationSender().sendPushNotification(to: user.fcm ?? "", title: self.cityTF.text! + "!", body: "Check the 'Promotions' tab in our app to find out more!")
             }
         }
         let alert = UIAlertController(title: "Success", message: "Added promotion", preferredStyle: UIAlertController.Style.alert)
