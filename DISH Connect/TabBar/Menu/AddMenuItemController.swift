@@ -294,7 +294,7 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
         removeButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
     }
     
-    private func checkItems(withImageString imageString: String, key: String, isNew: Bool) {
+    private func checkItems2(withImageString imageString: String, key: String, isNew: Bool) {
         MBProgressHUD.showAdded(to: self.view, animated: true)
         items.removeAll()
         Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").observe(DataEventType.childAdded) { (snapshot) in
@@ -309,17 +309,15 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                 item.key = value["key"] as? String ?? snapshot.key
                 self.items.append(item)
             }
-            DispatchQueue.main.async {
-                self.continueCompletion(withImageString: imageString, key: key, isNew: isNew)
-                MBProgressHUD.hide(for: self.view, animated: true)
-            }
+            print("checking items done")
+            
+            MBProgressHUD.hide(for: self.view, animated: true)
         }
     }
     
     private func continueCompletion(withImageString imageString: String, key: String, isNew: Bool) {
         MBProgressHUD.showAdded(to: self.view, animated: true)
         // get a new
-        let itemsCount = items.count + 1
         if isNew {
             let values : [String : Any] = [
                 "key" : key,
@@ -330,7 +328,6 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                 "time" : Int(Date().timeIntervalSince1970),
                 "scanPrice" : Int(self.scanPriceTF.text!)!,
                 "image" : imageString,
-                "listOrder" : itemsCount
             ]
             uploadNew(withValues: values, key: key)
         } else {
@@ -346,7 +343,6 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                         "time" : Int(Date().timeIntervalSince1970),
                         "scanPrice" : Int(self.scanPriceTF.text!)!,
                         "image" : imageString,
-                        "listOrder" : itemsCount
                     ]
                     self.uploadExisting(withValues: values, key: self.menuItemId!)
                 }
@@ -407,7 +403,8 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                     if putDataError == nil && storageMetadata != nil {
                         storageProfileRef.downloadURL { (url, downloadUrlError) in
                             if let metalImageUrl = url?.absoluteString {
-                                self.checkItems(withImageString: metalImageUrl, key: key!, isNew: false)
+                                print("all good")
+                                self.continueCompletion(withImageString: metalImageUrl, key: key!, isNew: false)
                             } else {
                                 MBProgressHUD.hide(for: self.view, animated: true)
                                 self.simpleAlert(title: "Error", message: downloadUrlError!.localizedDescription)
@@ -418,10 +415,10 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                         self.simpleAlert(title: "Error", message: putDataError!.localizedDescription)
                     }
                 }
-                } else {
-                    MBProgressHUD.hide(for: self.view, animated: true)
-                    simpleAlert(title: "Error", message: "Please make all fields are filled in.")
-                }
+            } else {
+                MBProgressHUD.hide(for: self.view, animated: true)
+                simpleAlert(title: "Error", message: "Please make all fields are filled in.")
+            }
         } else {
             if streetAddressTF.text != "" && cityTF.text != "" && zipcodeTF.text != "" && stateTF.text != "" && scanPriceTF.text != "" {
                 // image upload
@@ -437,7 +434,8 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                         if putDataError == nil && storageMetadata != nil {
                             storageProfileRef.downloadURL { (url, downloadUrlError) in
                                 if let metalImageUrl = url?.absoluteString {
-                                    self.checkItems(withImageString: metalImageUrl, key: key!, isNew: true)
+                                    print("all good")
+                                    self.continueCompletion(withImageString: metalImageUrl, key: key!, isNew: true)
                                 } else {
                                     MBProgressHUD.hide(for: self.view, animated: true)
                                     self.simpleAlert(title: "Error", message: downloadUrlError!.localizedDescription)
