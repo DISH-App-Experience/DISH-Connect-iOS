@@ -40,8 +40,8 @@ class LocationDetailController: UIViewController, UITextFieldDelegate, UIImagePi
     
     // MARK: - View Objects
     
-    let locationImage : UIImageView = {
-        let imageView = UIImageView()
+    let locationImage : CustomImageView = {
+        let imageView = CustomImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 20
         imageView.clipsToBounds = true
@@ -222,7 +222,7 @@ class LocationDetailController: UIViewController, UITextFieldDelegate, UIImagePi
         
         Database.database().reference().child("Apps").child(globalAppId).child("locations").child(locationId!).child("image").observe(DataEventType.value) { (snapshot) in
             if let value = snapshot.value as? String {
-                self.locationImage.loadImageUsingCacheWithUrlString(value)
+                self.locationImage.loadImageUsingUrlString(urlString: value)
             }
         }
     }

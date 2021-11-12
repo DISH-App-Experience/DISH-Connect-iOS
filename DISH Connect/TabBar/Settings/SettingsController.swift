@@ -28,8 +28,8 @@ class SettingsController: UIViewController {
         return scrollView
     }()
     
-    let profileImage : UIImageView = {
-        let imageView = UIImageView()
+    let profileImage : CustomImageView = {
+        let imageView = CustomImageView()
         imageView.backgroundColor = UIColor(named: "secondaryBackground")!
         imageView.contentMode = UIView.ContentMode.scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -504,7 +504,7 @@ class SettingsController: UIViewController {
     private func findProfilePic() {
         Database.database().reference().child("Apps").child(globalAppId).child("appIcon").observeSingleEvent(of: .value) { (snapshot) in
             if let profileURL = snapshot.value as? String {
-                self.profileImage.loadImageUsingCacheWithUrlString(profileURL)
+                self.profileImage.loadImageUsingUrlString(urlString: profileURL)
             }
         }
     }
