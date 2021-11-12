@@ -32,8 +32,8 @@ class CustomizeThemeController: UIViewController, UIImagePickerControllerDelegat
         return scrollView
     }()
 
-    let squareView1 : UIImageView = {
-        let view = UIImageView()
+    let squareView1 : CustomImageView = {
+        let view = CustomImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 20
         view.clipsToBounds = true
@@ -406,7 +406,7 @@ class CustomizeThemeController: UIViewController, UIImagePickerControllerDelegat
         }
         Database.database().reference().child("Apps").child(globalAppId).child("appIcon").observe(DataEventType.value) { (snapshot) in
             if let value = snapshot.value as? String {
-                self.squareView1.loadImageUsingCacheWithUrlString(value)
+                self.squareView1.loadImageUsingUrlString(urlString: value)
             }
         }
         MBProgressHUD.hide(for: self.view, animated: true)

@@ -371,7 +371,7 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
             let cell = tableView.dequeueReusableCell(withIdentifier: MenuItemCell.identifier, for: indexPath) as! MenuItemCell
             
             if let imageUrl = otherCatItems[indexPath.row].image {
-                cell.itemImageView.loadImage(from: URL(string: imageUrl)!)
+                cell.itemImageView.loadImageUsingUrlString(urlString: imageUrl)
             } else {
                 print("image view not able to define image")
                 cell.itemImageView.image = UIImage(named: "unknownItem")!
@@ -402,7 +402,7 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
             let cell = tableView.dequeueReusableCell(withIdentifier: MenuItemCell.identifier, for: indexPath) as! MenuItemCell
             
             if let imageUrl = items[indexPath.row].image {
-                cell.itemImageView.loadImage(from: URL(string: imageUrl)!)
+                cell.itemImageView.loadImageUsingUrlString(urlString: imageUrl)
             } else {
                 print("image view not able to define image")
                 cell.itemImageView.image = UIImage(named: "unknownItem")!
@@ -476,3 +476,47 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
 
 }
+
+
+
+let imageCache = NSCache<NSString, UIImage>()
+
+class CustomImageView: UIImageView {
+    
+    var imageUrlString: String?
+    
+    func loadImageUsingUrlString(urlString: String) {
+        
+        imageUrlString = urlString
+        
+        guard let url = URL(string: urlString) else { return }
+        
+        image = nil
+        
+        if let imageFromCache = imageCache.object(forKey: urlString as NSString) {
+            self.image = imageFromCache
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url, completionHandler: { (data, respones, error) in
+            
+            if error != nil {
+                print(error ?? "")
+                return
+            }
+            
+            DispatchQueue.main.async {
+                guard let imageToCache = UIImage(data: data!) else { return }
+                
+                if self.imageUrlString == urlString {
+                    self.image = imageToCache
+                }
+                
+                imageCache.setObject(imageToCache, forKey: urlString as NSString)
+            }
+            
+        }).resume()
+    }
+    
+}
+

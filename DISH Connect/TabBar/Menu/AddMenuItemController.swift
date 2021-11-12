@@ -340,7 +340,7 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                         "description" : "\(self.stateTF.text!)",
                         "price" : Double(self.zipcodeTF.text!)!,
                         "category" : String(self.selectedCategory?.key ?? string),
-                        "time" : Int(Date().timeIntervalSince1970),
+//                        "time" : Int(Date().timeIntervalSince1970),
                         "scanPrice" : Int(self.scanPriceTF.text!)!,
                         "image" : imageString,
                     ]

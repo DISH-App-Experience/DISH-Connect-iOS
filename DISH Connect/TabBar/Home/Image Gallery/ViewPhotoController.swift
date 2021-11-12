@@ -16,14 +16,14 @@ class ViewPhotoController: UIViewController {
     
     var photo : Photo? {
         didSet {
-            self.imageView.loadImageUsingCacheWithUrlString(photo!.image!)
+            self.imageView.loadImageUsingUrlString(urlString: photo!.image!)
         }
     }
     
     // MARK: - View Objects
     
-    let imageView : UIImageView = {
-        let imageView = UIImageView()
+    let imageView : CustomImageView = {
+        let imageView = CustomImageView()
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 25
         imageView.backgroundColor = UIColor(named: "photoBacgroundSet")!
