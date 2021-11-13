@@ -244,7 +244,7 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
                 self.simpleAlert(title: "Error", message: error!.localizedDescription)
             } else {
                 MBProgressHUD.hide(for: self.view, animated: true)
-                self.completion()
+                self.completion(isNew: false)
             }
         }
     }
@@ -257,27 +257,35 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
                 self.simpleAlert(title: "Error", message: error!.localizedDescription)
             } else {
                 MBProgressHUD.hide(for: self.view, animated: true)
-                self.completion()
+                self.completion(isNew: true)
             }
         }
     }
     
-    private func completion() {
-        Database.database().reference().child("Apps").child(globalAppId).child("Users").observe(DataEventType.childAdded) { snapshot in
-            if let value = snapshot.value as? [String : Any] {
-                var user = Customer()
-                user.fcm = value["fcmToken"] as? String
-                self.users.append(user)
+    private func completion(isNew: Bool) {
+        if isNew {
+            Database.database().reference().child("Apps").child(globalAppId).child("Users").observe(DataEventType.childAdded) { snapshot in
+                if let value = snapshot.value as? [String : Any] {
+                    var user = Customer()
+                    user.fcm = value["fcmToken"] as? String
+                    self.users.append(user)
+                }
+                for user in self.users {
+                    PushNotificationSender().sendPushNotification(to: user.fcm ?? "", title: self.cityTF.text! + "!", body: "Check the 'Promotions' tab in our app to find out more!")
+                }
             }
-            for user in self.users {
-                PushNotificationSender().sendPushNotification(to: user.fcm ?? "", title: self.cityTF.text! + "!", body: "Check the 'Promotions' tab in our app to find out more!")
-            }
+            let alert = UIAlertController(title: "Success", message: "Added promotion", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: { (action) in
+                self.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Success", message: "Added promotion", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: { (action) in
+                self.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alert, animated: true, completion: nil)
         }
-        let alert = UIAlertController(title: "Success", message: "Added promotion", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: { (action) in
-            self.navigationController?.popViewController(animated: true)
-        }))
-        self.present(alert, animated: true, completion: nil)
     }
     
     // MARK: - Objective-C Functions

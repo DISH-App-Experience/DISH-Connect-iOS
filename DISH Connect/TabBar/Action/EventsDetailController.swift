@@ -23,9 +23,13 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
     
     var locations = [Location]()
     
+    var ogLocation = ""
+    
     var users = [Customer]()
     
     var selectedLocation : Location?
+    
+    var hasSelectedLocation = false
     
     var action : String? {
         didSet {
@@ -126,7 +130,7 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
         updateViewConstraints()
         delegates()
         checkCategories()
-
+        
         // Do any additional setup after loading the view.
     }
     
@@ -220,7 +224,7 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
                 self.cityTF.text = value
             }
         }
-
+        
         base.child("date").observe(DataEventType.value) { (snapshot) in
             if let value = snapshot.value as? Int {
                 let dateFormatter = DateFormatter()
@@ -234,12 +238,13 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
                 self.stateTF.text = value
             }
         }
-
+        
         base.child("location").observe(DataEventType.value) { (snapshot) in
             if let value = snapshot.value as? String {
                 root.child("locations").child(value).child("street").observe(DataEventType.value) { (name) in
                     self.streetAddressTF.text = name.value as? String
                 }
+                self.ogLocation = value
             }
         }
     }
@@ -263,8 +268,8 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
     
     private func continueCompletion(withImageString imageString: String, key: String, isNew: Bool) {
         MBProgressHUD.showAdded(to: self.view, animated: true)
-        if let location = selectedLocation?.key {
-            if isNew {
+        if isNew {
+            if let location = selectedLocation?.key {
                 let values : [String : Any] = [
                     "key" : key,
                     "name" : "\(self.cityTF.text!)",
@@ -275,20 +280,33 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
                 ]
                 uploadNew(withValues: values, key: key)
             } else {
-                print("upload existing with id: " + eventId!)
+                MBProgressHUD.hide(for: self.view, animated: true)
+                simpleAlert(title: "Error", message: "Please select a valid location")
+                MBProgressHUD.hide(for: self.view, animated: true)
+            }
+        } else {
+            print("upload existing with id: " + self.eventId!)
+            if hasSelectedLocation == true {
                 let values : [String : Any] = [
                     "key" : self.eventId!,
                     "name" : "\(self.cityTF.text!)",
                     "desc" : "\(self.stateTF.text!)",
                     "date" : Int(Date(detectFromString: self.zipcodeTF.text!)!.timeIntervalSince1970),
                     "imageString" : imageString,
-                    "location" : location
+                    "location" : selectedLocation?.key!
+                ]
+                self.uploadExisting(withValues: values, key: self.eventId!)
+            } else {
+                let values : [String : Any] = [
+                    "key" : self.eventId!,
+                    "name" : "\(self.cityTF.text!)",
+                    "desc" : "\(self.stateTF.text!)",
+                    "date" : Int(Date(detectFromString: self.zipcodeTF.text!)!.timeIntervalSince1970),
+                    "imageString" : imageString,
+                    "location" : self.ogLocation
                 ]
                 self.uploadExisting(withValues: values, key: self.eventId!)
             }
-        } else {
-            MBProgressHUD.hide(for: self.view, animated: true)
-            simpleAlert(title: "Error", message: "Please select a valid location")
         }
     }
     
@@ -300,7 +318,7 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
                 self.simpleAlert(title: "Error", message: error!.localizedDescription)
             } else {
                 MBProgressHUD.hide(for: self.view, animated: true)
-                self.completion()
+                self.completion(isNew: false)
             }
         }
     }
@@ -313,31 +331,39 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
                 self.simpleAlert(title: "Error", message: error!.localizedDescription)
             } else {
                 MBProgressHUD.hide(for: self.view, animated: true)
-                self.completion()
+                self.completion(isNew: true)
             }
         }
     }
     
-    private func completion() {
-        Database.database().reference().child("Apps").child(globalAppId).child("Users").observe(DataEventType.childAdded) { snapshot in
-            if let value = snapshot.value as? [String : Any] {
-                var user = Customer()
-                user.fcm = value["fcmToken"] as! String
-                self.users.append(user)
-            }
-            if let datePicker = self.zipcodeTF.inputView as? UIDatePicker {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "MMMM d"
-                for user in self.users {
-                    PushNotificationSender().sendPushNotification(to: user.fcm!, title: self.cityTF.text! + "!", body: "What're you doing on \(formatter.string(from: datePicker.date))?")
+    private func completion(isNew: Bool) {
+        if isNew {
+            Database.database().reference().child("Apps").child(globalAppId).child("Users").observe(DataEventType.childAdded) { snapshot in
+                if let value = snapshot.value as? [String : Any] {
+                    var user = Customer()
+                    user.fcm = value["fcmToken"] as! String
+                    self.users.append(user)
+                }
+                if let datePicker = self.zipcodeTF.inputView as? UIDatePicker {
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "MMMM d"
+                    for user in self.users {
+                        PushNotificationSender().sendPushNotification(to: user.fcm!, title: self.cityTF.text! + "!", body: "What're you doing on \(formatter.string(from: datePicker.date))?")
+                    }
                 }
             }
+            let alert = UIAlertController(title: "Success", message: "Added event", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: { (action) in
+                self.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Success", message: "Added event", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: { (action) in
+                self.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alert, animated: true, completion: nil)
         }
-        let alert = UIAlertController(title: "Success", message: "Added event", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: { (action) in
-            self.navigationController?.popViewController(animated: true)
-        }))
-        self.present(alert, animated: true, completion: nil)
     }
     
     private func checkCategories() {
@@ -498,16 +524,17 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return locations.count
     }
-
+    
     func pickerView( _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return locations[row].street!
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        hasSelectedLocation = true
         selectedLocation = locations[row]
         streetAddressTF.text = locations[row].street!
         if let datePicker = self.zipcodeTF.inputView as? UIDatePicker {
@@ -516,6 +543,6 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
             zipcodeTF.text = dateFormatter.string(from: datePicker.date)
         }
     }
-
+    
 }
 

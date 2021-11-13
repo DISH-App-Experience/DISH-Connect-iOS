@@ -13,7 +13,7 @@ class SettingsController: UIViewController {
     
     // MARK: - Constants
     
-    let version = "1.0.3"
+    let version = "1.0.6"
     
     let language = "English"
     
