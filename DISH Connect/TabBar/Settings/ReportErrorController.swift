@@ -138,9 +138,10 @@ class ReportErrorController: UIViewController, UITextFieldDelegate {
                 "reporter" : "\(Auth.auth().currentUser!.uid)",
                 "date" : "\(Int(Date().timeIntervalSince1970))",
                 "message" : "\(self.mainTextField.text!)",
-                "version" : "1.0.0"
+                "version" : "1.0.8"
             ]
             Database.database().reference().child("Feedback").child("Connect").childByAutoId().updateChildValues(values)
+            PushNotificationSender().sendPushNotification(to: "fMAumCLS_kX9j5I31A7Eps:APA91bHEaQSV3HNY_eyMFjabR_htPnR4oRxVFnlADFZ8IilsBopHxj3MLFAI7_jnKxJCH4QitLRUxGkRrnBLWGlm2Q8FsJ9gqYXV2Ae6ZSmtmjH2YR5_4da4WnuMpujVtwKgQVHBg8ap", title: "Error Report", body: "Please Check Firebase DB to see reported errors.")
             MBProgressHUD.hide(for: view, animated: true)
             let alert = UIAlertController(title: "Success", message: "Thank you for providing feedback!", preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: { (action) in
