@@ -197,7 +197,7 @@ class MenuCategoryDetailController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func removeButtonTapped() {
-        let alert = UIAlertController(title: "Remove?", message: "Are you sure you would like to delete this location?", preferredStyle: UIAlertController.Style.alert)
+        let alert = UIAlertController(title: "Remove?", message: "Are you sure you would like to delete this menu category?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (action) in
             Database.database().reference().child("Apps").child(globalAppId).child("menu").child("categories").child(self.categoryId!).removeValue()
             self.navigationController?.popViewController(animated: true)

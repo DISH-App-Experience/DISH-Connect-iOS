@@ -52,6 +52,12 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
     
     // MARK: - View Objects
     
+    let scrollView : UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
     let locationImage : MainImageView = {
         let imageView = MainImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -79,7 +85,15 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
     }()
     
     let zipcodeTF : MainTextField = {
-        let textField = MainTextField(placeholderString: "Date")
+        let textField = MainTextField(placeholderString: "Start")
+        textField.isSecureTextEntry = false
+        textField.keyboardType = UIKeyboardType.decimalPad
+        textField.autocapitalizationType = UITextAutocapitalizationType.words
+        return textField
+    }()
+    
+    let endDateTF : MainTextField = {
+        let textField = MainTextField(placeholderString: "End")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.decimalPad
         textField.autocapitalizationType = UITextAutocapitalizationType.words
@@ -163,46 +177,60 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
     // MARK: - Private Functions
     
     private func constraints() {
-        view.addSubview(locationImage)
-        locationImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
+        view.addSubview(scrollView)
+        scrollView.contentSize = CGSize(width: view.frame.size.width, height: 800)
+        scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        scrollView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        scrollView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        
+        scrollView.addSubview(locationImage)
+        locationImage.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 30).isActive = true
         locationImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         locationImage.widthAnchor.constraint(equalToConstant: 150).isActive = true
         locationImage.heightAnchor.constraint(equalToConstant: 150).isActive = true
         
-        view.addSubview(photoButton)
+        scrollView.addSubview(photoButton)
         photoButton.topAnchor.constraint(equalTo: locationImage.bottomAnchor, constant: 16).isActive = true
         photoButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         photoButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         photoButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        view.addSubview(zipcodeTF)
+        scrollView.addSubview(zipcodeTF)
         zipcodeTF.setInputViewDatePicker(target: self, selector: #selector(donePressed))
         zipcodeTF.topAnchor.constraint(equalTo: photoButton.bottomAnchor, constant: 30).isActive = true
         zipcodeTF.widthAnchor.constraint(equalToConstant: 135).isActive = true
         zipcodeTF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         zipcodeTF.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        view.addSubview(cityTF)
+        scrollView.addSubview(cityTF)
         cityTF.topAnchor.constraint(equalTo: photoButton.bottomAnchor, constant: 30).isActive = true
         cityTF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         cityTF.rightAnchor.constraint(equalTo: zipcodeTF.leftAnchor, constant: -16).isActive = true
         cityTF.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        view.addSubview(stateTF)
-        stateTF.topAnchor.constraint(equalTo: cityTF.bottomAnchor, constant: 16).isActive = true
+        scrollView.addSubview(endDateTF)
+        endDateTF.setInputViewDatePicker(target: self, selector: #selector(donePressedEnd))
+        endDateTF.topAnchor.constraint(equalTo: cityTF.bottomAnchor, constant: 16).isActive = true
+        endDateTF.widthAnchor.constraint(equalToConstant: 135).isActive = true
+        endDateTF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
+        endDateTF.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        scrollView.addSubview(streetAddressTF)
+        streetAddressTF.inputView = pickerView
+        streetAddressTF.topAnchor.constraint(equalTo: cityTF.bottomAnchor, constant: 16).isActive = true
+        streetAddressTF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        streetAddressTF.rightAnchor.constraint(equalTo: endDateTF.leftAnchor, constant: -16).isActive = true
+        streetAddressTF.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        scrollView.addSubview(stateTF)
+        stateTF.topAnchor.constraint(equalTo: streetAddressTF.bottomAnchor, constant: 16).isActive = true
         stateTF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         stateTF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         stateTF.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        view.addSubview(streetAddressTF)
-        streetAddressTF.inputView = pickerView
-        streetAddressTF.topAnchor.constraint(equalTo: stateTF.bottomAnchor, constant: 16).isActive = true
-        streetAddressTF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
-        streetAddressTF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        streetAddressTF.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        
-        view.addSubview(mainButton)
-        mainButton.topAnchor.constraint(equalTo: streetAddressTF.bottomAnchor, constant: 27).isActive = true
+        scrollView.addSubview(mainButton)
+        mainButton.topAnchor.constraint(equalTo: stateTF.bottomAnchor, constant: 27).isActive = true
         mainButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         mainButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         mainButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
@@ -253,13 +281,14 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
         streetAddressTF.delegate = self
         cityTF.delegate = self
         zipcodeTF.delegate = self
+        endDateTF.delegate = self
         stateTF.delegate = self
         pickerView.delegate = self
         pickerView.dataSource = self
     }
     
     private func addRemoveButton() {
-        view.addSubview(removeButton)
+        scrollView.addSubview(removeButton)
         removeButton.widthAnchor.constraint(equalToConstant: 203).isActive = true
         removeButton.heightAnchor.constraint(equalToConstant: 22).isActive = true
         removeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -275,6 +304,7 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
                     "name" : "\(self.cityTF.text!)",
                     "desc" : "\(self.stateTF.text!)",
                     "date" : Int(Date(detectFromString: self.zipcodeTF.text!)!.timeIntervalSince1970),
+                    "endDate" : Int(Date(detectFromString: self.endDateTF.text!)!.timeIntervalSince1970),
                     "imageString" : imageString,
                     "location" : location
                 ]
@@ -292,6 +322,7 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
                     "name" : "\(self.cityTF.text!)",
                     "desc" : "\(self.stateTF.text!)",
                     "date" : Int(Date(detectFromString: self.zipcodeTF.text!)!.timeIntervalSince1970),
+                    "endDate" : Int(Date(detectFromString: self.endDateTF.text!)!.timeIntervalSince1970),
                     "imageString" : imageString,
                     "location" : selectedLocation?.key!
                 ]
@@ -302,6 +333,7 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
                     "name" : "\(self.cityTF.text!)",
                     "desc" : "\(self.stateTF.text!)",
                     "date" : Int(Date(detectFromString: self.zipcodeTF.text!)!.timeIntervalSince1970),
+                    "endDate" : Int(Date(detectFromString: self.endDateTF.text!)!.timeIntervalSince1970),
                     "imageString" : imageString,
                     "location" : self.ogLocation
                 ]
@@ -459,7 +491,7 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
     }
     
     @objc func removeButtonTapped() {
-        let alert = UIAlertController(title: "Remove?", message: "Are you sure you would like to delete this location?", preferredStyle: UIAlertController.Style.alert)
+        let alert = UIAlertController(title: "Remove?", message: "Are you sure you would like to delete this event?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (action) in
             Database.database().reference().child("Apps").child(globalAppId).child("events").child(self.eventId!).removeValue()
             self.navigationController?.popViewController(animated: true)
@@ -477,10 +509,23 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
     @objc func donePressed() {
         if let datePicker = self.zipcodeTF.inputView as? UIDatePicker {
             let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .medium
+            dateFormatter.dateFormat = "M/d @ h:mma"
             zipcodeTF.text = dateFormatter.string(from: datePicker.date)
+        } else if let datePicker = self.endDateTF.inputView as? UIDatePicker {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "M/d @ h:mma"
+            endDateTF.text = dateFormatter.string(from: datePicker.date)
         }
         zipcodeTF.resignFirstResponder()
+    }
+    
+    @objc func donePressedEnd() {
+        if let datePicker = self.endDateTF.inputView as? UIDatePicker {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "M/d @ h:mma"
+            endDateTF.text = dateFormatter.string(from: datePicker.date)
+        }
+        endDateTF.resignFirstResponder()
     }
     
     // MARK: - UITextField Delegate Functions

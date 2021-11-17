@@ -309,7 +309,7 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func removeButtonTapped() {
-        let alert = UIAlertController(title: "Remove?", message: "Are you sure you would like to delete this location?", preferredStyle: UIAlertController.Style.alert)
+        let alert = UIAlertController(title: "Remove?", message: "Are you sure you would like to delete this promotion?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (action) in
             Database.database().reference().child("Apps").child(globalAppId).child("promotions").child(self.eventId!).removeValue()
             self.navigationController?.popViewController(animated: true)

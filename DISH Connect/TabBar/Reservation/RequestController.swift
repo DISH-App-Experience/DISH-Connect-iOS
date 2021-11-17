@@ -46,11 +46,16 @@ class RequestController: UIViewController {
                     if let seats = request.numberOfSeats {
                         seatsLabel.text = "\(seats) Seats"
                     }
+                    if let notes = request.notes {
+                        self.notes = notes
+                    }
                     
                 }
             }
         }
     }
+    
+    var notes = ""
     
     private let bigView : UIView = {
         let view = UIView()
@@ -150,6 +155,25 @@ class RequestController: UIViewController {
         label.textAlignment = NSTextAlignment.right
         return label
     }()
+    
+    private let notesHolderLabel : UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 15)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.black
+        label.text = "Number of Seats"
+        label.textAlignment = NSTextAlignment.left
+        return label
+    }()
+    
+    private let notesLabel : UIButton = {
+        let button = UIButton(type: UIButton.ButtonType.system)
+        button.setTitle("View Notes", for: UIControl.State.normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(UIColor.mainBlue, for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(notesNButtonPressed), for: UIControl.Event.touchUpInside)
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -212,6 +236,18 @@ class RequestController: UIViewController {
         seatsLabel.rightAnchor.constraint(equalTo: bigView.rightAnchor, constant: -16).isActive = true
         seatsLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
+        bigView.addSubview(notesHolderLabel)
+        notesHolderLabel.topAnchor.constraint(equalTo: seatsHolderLabel.bottomAnchor).isActive = true
+        notesHolderLabel.leftAnchor.constraint(equalTo: bigView.leftAnchor, constant: 16).isActive = true
+        notesHolderLabel.rightAnchor.constraint(equalTo: bigView.rightAnchor, constant: -16).isActive = true
+        notesHolderLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        bigView.addSubview(notesLabel)
+        notesLabel.topAnchor.constraint(equalTo: seatsLabel.bottomAnchor).isActive = true
+        notesLabel.rightAnchor.constraint(equalTo: bigView.rightAnchor, constant: -16).isActive = true
+        notesLabel.widthAnchor.constraint(equalToConstant: 85).isActive = true
+        notesLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
         view.addSubview(acceptButton)
         acceptButton.topAnchor.constraint(equalTo: bigView.bottomAnchor, constant: 16).isActive = true
         acceptButton.leftAnchor.constraint(equalTo: bigView.leftAnchor).isActive = true
@@ -223,6 +259,11 @@ class RequestController: UIViewController {
         declineButton.rightAnchor.constraint(equalTo: bigView.rightAnchor).isActive = true
         declineButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         declineButton.widthAnchor.constraint(equalToConstant: ((view.frame.size.height - 470) / 2) - 60).isActive = true
+    }
+    
+    @objc func notesNButtonPressed() {
+        add3DMotion(withFeedbackStyle: UIImpactFeedbackGenerator.FeedbackStyle.medium)
+        simpleAlert(title: "Notes:", message: notes)
     }
     
     @objc func accepted() {

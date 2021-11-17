@@ -112,6 +112,7 @@ class RequestsController: UIViewController, UITableViewDelegate, UITableViewData
                 reservation.recipient = value["recipient"] as? String
                 reservation.startTime = value["startTime"] as? String
                 reservation.endTime = value["endTime"] as? String
+                reservation.notes = value["notes"] as? String ?? "noNotes"
                 reservation.key = snapshot.key
                 reservation.numberOfSeats = value["numberOfSeats"] as? Int
                 reservation.timeRequestSubmitted = value["timeRequestSubmitted"] as? Int

@@ -33,7 +33,7 @@ class MainButton : UIButton {
     }
     
     @objc func effects() {
-        add3DMotion(withFeedbackStyle: UIImpactFeedbackGenerator.FeedbackStyle.light)
+        add3DMotion(withFeedbackStyle: UIImpactFeedbackGenerator.FeedbackStyle.medium)
     }
     
 }

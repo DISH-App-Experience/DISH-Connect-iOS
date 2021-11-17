@@ -1105,7 +1105,7 @@ extension MainTextField {
     func setInputViewDatePicker(target: Any, selector: Selector) {
         let screenWidth = UIScreen.main.bounds.width
         let datePicker = UIDatePicker(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 216))
-        datePicker.datePickerMode = .date
+        datePicker.datePickerMode = .dateAndTime
         if #available(iOS 14, *) {
             datePicker.preferredDatePickerStyle = .wheels
             datePicker.sizeToFit()
@@ -1121,6 +1121,14 @@ extension MainTextField {
 
 
 extension UIButton {
+    func add3DMotion(withFeedbackStyle style: UIImpactFeedbackGenerator.FeedbackStyle) {
+        let generator = UIImpactFeedbackGenerator(style: style)
+        generator.impactOccurred(intensity: 1.0)
+    }
+}
+
+
+extension UIViewController {
     func add3DMotion(withFeedbackStyle style: UIImpactFeedbackGenerator.FeedbackStyle) {
         let generator = UIImpactFeedbackGenerator(style: style)
         generator.impactOccurred(intensity: 1.0)

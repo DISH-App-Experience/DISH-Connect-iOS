@@ -36,7 +36,7 @@ class ViewPhotoController: UIViewController {
         let button = UIButton(type: UIButton.ButtonType.system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-        button.setTitle("Remove Location", for: UIControl.State.normal)
+        button.setTitle("Remove Image", for: UIControl.State.normal)
         button.setTitleColor(UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: 1), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(removeButtonTapped), for: UIControl.Event.touchUpInside)
         return button
@@ -91,7 +91,7 @@ class ViewPhotoController: UIViewController {
     // MARK: - Objective-C Functions
     
     @objc func removeButtonTapped() {
-        let alert = UIAlertController(title: "Remove?", message: "Are you sure you would like to delete this location?", preferredStyle: UIAlertController.Style.alert)
+        let alert = UIAlertController(title: "Remove?", message: "Are you sure you would like to delete this image?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (action) in
             Database.database().reference().child("Apps").child(globalAppId).child("photos").child(self.photo!.key!).removeValue()
             self.navigationController?.popViewController(animated: true)
