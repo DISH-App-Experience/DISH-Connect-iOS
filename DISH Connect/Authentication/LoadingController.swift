@@ -24,7 +24,7 @@ class LoadingController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor(named: "backgroundColor")
         
         view.addSubview(signInLogo)
         signInLogo.heightAnchor.constraint(equalToConstant: 93).isActive = true

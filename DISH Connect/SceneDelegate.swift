@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let hasSeenOnboarding = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
-        window?.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
+//        window?.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
         window?.windowScene = windowScene
         
         if hasSeenOnboarding {
