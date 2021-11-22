@@ -34,7 +34,7 @@ class NoConnection: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor(named: "backgroundColor")
         
         print("here")
         
