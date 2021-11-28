@@ -34,7 +34,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>Please allow calendar access to use the reservations feature!</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>DISH would like to access third party frameworks and for tracking pruposes.</string>
+	<string>DISH would like to access third party frameworks and to gather user demographics</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

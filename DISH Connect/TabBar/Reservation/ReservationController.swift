@@ -87,7 +87,7 @@ class ReservationController: UIViewController, CalendarDelegate, CalendarDataSou
     let topView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "backgroundColor")!
         return view
     }()
     
@@ -110,6 +110,7 @@ class ReservationController: UIViewController, CalendarDelegate, CalendarDataSou
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.tintColor = UIColor.mainBlue
         navigationController?.navigationBar.prefersLargeTitles = true
+        UINavigationBar().backgroundColor = .green
         navigationItem.largeTitleDisplayMode = UINavigationItem.LargeTitleDisplayMode.always
         
         navigationItem.backButtonTitle = "Back"
@@ -312,5 +313,24 @@ final class CustomViewEvent: EventViewGeneral {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension UINavigationController {
+    func transparentNavigationBar() {
+        self.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationBar.shadowImage = UIImage()
+        self.navigationBar.isTranslucent = true
+    }
+
+    func setTintColor(_ color: UIColor) {
+        self.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: color]
+        self.navigationBar.tintColor = color
+    }
+
+    func backgroundColor(_ color: UIColor) {
+        navigationBar.setBackgroundImage(nil, for: .default)
+        navigationBar.barTintColor = color
+        navigationBar.shadowImage = UIImage()
     }
 }

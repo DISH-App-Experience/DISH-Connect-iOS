@@ -44,7 +44,7 @@ class ReservationsRequestsCell: UITableViewCell {
         let label = UILabel()
         label.text = "Name"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.black
+        label.textColor = UIColor(named: "mainTextColor")!
         label.font = UIFont.boldSystemFont(ofSize: 16)
         return label
     }()
@@ -54,7 +54,7 @@ class ReservationsRequestsCell: UITableViewCell {
         label.text = "Time"
 //        label.backgroundColor = .orange
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.black
+        label.textColor = UIColor(named: "mainTextColor")!
         label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
@@ -65,7 +65,7 @@ class ReservationsRequestsCell: UITableViewCell {
 //        label.backgroundColor = .yellow
         label.textAlignment = NSTextAlignment.center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.black
+        label.textColor = UIColor(named: "mainTextColor")!
         label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()

@@ -498,7 +498,6 @@ class HomeController: UIViewController {
         Database.database().reference().child("Apps").child(globalAppId).child("Users").observe(.childAdded) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
                 let user = Customer()
-                user.name = value["firstName"] as! String
                 user.email = value["email"] as! String
                 self.users.append(user)
             }
