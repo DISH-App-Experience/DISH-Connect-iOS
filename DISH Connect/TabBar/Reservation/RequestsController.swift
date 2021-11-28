@@ -21,7 +21,7 @@ class RequestsController: UIViewController, UITableViewDelegate, UITableViewData
     
     private let tableView : UITableView = {
         let tableView = UITableView()
-        tableView.backgroundColor = UIColor.white
+        tableView.backgroundColor = UIColor.clear
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(ReservationsRequestsCell.self, forCellReuseIdentifier: ReservationsRequestsCell.identifier)
         return tableView
