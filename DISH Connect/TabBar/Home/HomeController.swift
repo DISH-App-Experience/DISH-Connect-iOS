@@ -590,7 +590,7 @@ class HomeController: UIViewController {
     }
     
     @objc func buttonAction2() {
-        print("not tappable")
+        goToFollowingScreen(viewController: AnalyticsBoard())
     }
     
     @objc func buttonAction3() {
