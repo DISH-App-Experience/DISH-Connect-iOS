@@ -67,6 +67,7 @@
 		785F4DB426B02FFC0009D545 /* RequestProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785F4DB326B02FFC0009D545 /* RequestProperty.swift */; };
 		785F4DB626B033140009D545 /* ViewReservationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785F4DB526B033140009D545 /* ViewReservationController.swift */; };
 		7875AD7526AF608000455584 /* PushNotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7875AD7426AF608000455584 /* PushNotificationSender.swift */; };
+		78937C97275452D900D0231D /* Analytic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78937C96275452D900D0231D /* Analytic.swift */; };
 		78B20DC726BE23AD0015B4CC /* UIBarButtonItem+Badge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B20DC626BE23AD0015B4CC /* UIBarButtonItem+Badge.swift */; };
 		78C9AFFF262C471600F0B43A /* MenuItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C9AFFE262C471600F0B43A /* MenuItemCell.swift */; };
 		78C9B00B262C487400F0B43A /* MenuItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C9B00A262C487400F0B43A /* MenuItemModel.swift */; };
@@ -183,6 +184,7 @@
 		785F4DB326B02FFC0009D545 /* RequestProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestProperty.swift; sourceTree = "<group>"; };
 		785F4DB526B033140009D545 /* ViewReservationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewReservationController.swift; sourceTree = "<group>"; };
 		7875AD7426AF608000455584 /* PushNotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationSender.swift; sourceTree = "<group>"; };
+		78937C96275452D900D0231D /* Analytic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytic.swift; sourceTree = "<group>"; };
 		78B20DC626BE23AD0015B4CC /* UIBarButtonItem+Badge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Badge.swift"; sourceTree = "<group>"; };
 		78C9AFFE262C471600F0B43A /* MenuItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemCell.swift; sourceTree = "<group>"; };
 		78C9B00A262C487400F0B43A /* MenuItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemModel.swift; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 				782885FD26380C9C0025375A /* PromotionModel.swift */,
 				785F4DAC26AF950B0009D545 /* Reservation.swift */,
 				78DC5DA826C21D4D005AEE03 /* Scan.swift */,
+				78937C96275452D900D0231D /* Analytic.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -820,6 +823,7 @@
 				78D340F0267D07A80007C373 /* CustomDayCell.swift in Sources */,
 				780567EF261B1EA7006ADEA9 /* AppDelegate.swift in Sources */,
 				780568B4261B2F2E006ADEA9 /* OnboardingController1.swift in Sources */,
+				78937C97275452D900D0231D /* Analytic.swift in Sources */,
 				780567F1261B1EA7006ADEA9 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -992,7 +996,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "DISH Connect/DISH Connect.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = "DISH Connect/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1000,7 +1004,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.020000011;
+				MARKETING_VERSION = 1.020000013;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.DISH-Connect";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1017,7 +1021,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "DISH Connect/DISH Connect.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = "DISH Connect/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1025,7 +1029,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.020000011;
+				MARKETING_VERSION = 1.020000013;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.DISH-Connect";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

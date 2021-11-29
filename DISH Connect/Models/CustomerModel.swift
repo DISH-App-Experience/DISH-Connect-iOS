@@ -25,4 +25,6 @@ class Customer : NSObject {
     var fcm : String?
     var name : String?
     var email : String?
+    var gender : String?
+    var birthday : String?
 }
