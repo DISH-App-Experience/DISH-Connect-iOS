@@ -40,6 +40,15 @@ class LocationDetailController: UIViewController, UITextFieldDelegate, UIImagePi
     
     // MARK: - View Objects
     
+    let scrollView : UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.backgroundColor = UIColor.clear
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
+    
     let locationImage : CustomImageView = {
         let imageView = CustomImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -152,43 +161,50 @@ class LocationDetailController: UIViewController, UITextFieldDelegate, UIImagePi
     // MARK: - Private Functions
     
     private func constraints() {
-        view.addSubview(locationImage)
-        locationImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
+        view.addSubview(scrollView)
+        scrollView.contentSize = CGSize(width: self.view.frame.size.width - 50, height: 900)
+        scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        scrollView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        scrollView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        scrollView.addSubview(locationImage)
+        locationImage.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 30).isActive = true
         locationImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         locationImage.widthAnchor.constraint(equalToConstant: 150).isActive = true
         locationImage.heightAnchor.constraint(equalToConstant: 150).isActive = true
         
-        view.addSubview(streetAddressTF)
+        scrollView.addSubview(streetAddressTF)
         streetAddressTF.topAnchor.constraint(equalTo: locationImage.bottomAnchor, constant: 30).isActive = true
         streetAddressTF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         streetAddressTF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         streetAddressTF.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        view.addSubview(zipcodeTF)
+        scrollView.addSubview(zipcodeTF)
         zipcodeTF.topAnchor.constraint(equalTo: streetAddressTF.bottomAnchor, constant: 16).isActive = true
         zipcodeTF.widthAnchor.constraint(equalToConstant: 135).isActive = true
         zipcodeTF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         zipcodeTF.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        view.addSubview(cityTF)
+        scrollView.addSubview(cityTF)
         cityTF.topAnchor.constraint(equalTo: streetAddressTF.bottomAnchor, constant: 16).isActive = true
         cityTF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         cityTF.rightAnchor.constraint(equalTo: zipcodeTF.leftAnchor, constant: -16).isActive = true
         cityTF.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        view.addSubview(stateTF)
+        scrollView.addSubview(stateTF)
         stateTF.topAnchor.constraint(equalTo: cityTF.bottomAnchor, constant: 16).isActive = true
         stateTF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         stateTF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         stateTF.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        view.addSubview(photoButton)
+        scrollView.addSubview(photoButton)
         photoButton.topAnchor.constraint(equalTo: stateTF.bottomAnchor, constant: 16).isActive = true
         photoButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         photoButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         photoButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
-        view.addSubview(mainButton)
+        scrollView.addSubview(mainButton)
         mainButton.topAnchor.constraint(equalTo: photoButton.bottomAnchor, constant: 27).isActive = true
         mainButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         mainButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true

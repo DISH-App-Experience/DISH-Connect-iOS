@@ -31,7 +31,12 @@ extension UIViewController {
     func simpleAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone) {
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            var popoverCntlr = UIPopoverController(contentViewController: alert)
+            popoverCntlr.present(from: CGRect(x: self.view.frame.size.width / 2, y: self.view.frame.size.height / 4, width: 0, height: 0),  in: self.view, permittedArrowDirections: UIPopoverArrowDirection.any, animated: true)
+        }
     }
     
     func format(with mask: String, phone: String) -> String {

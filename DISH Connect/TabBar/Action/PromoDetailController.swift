@@ -217,7 +217,7 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
                 "key" : key,
                 "name" : "\(self.cityTF.text!)",
                 "desc" : "\(self.stateTF.text!)",
-                "code" : "\(self.streetAddressTF.text!)",
+                "code" : "\(self.streetAddressTF.text ?? "NONE")",
                 "validUntil" : Int(Date(detectFromString: zipcodeTF.text!)!.timeIntervalSince1970),
                 "date" : Int(Date().timeIntervalSince1970),
             ]
@@ -228,7 +228,7 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
                 "key" : self.eventId!,
                 "name" : "\(self.cityTF.text!)",
                 "desc" : "\(self.stateTF.text!)",
-                "code" : "\(self.streetAddressTF.text!)",
+                "code" : "\(self.streetAddressTF.text ?? "NONE")",
                 "validUntil" : Int(Date(detectFromString: zipcodeTF.text!)!.timeIntervalSince1970),
                 "date" : Int(Date().timeIntervalSince1970),
             ]

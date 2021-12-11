@@ -82,6 +82,15 @@ class TabBarController: UITabBarController {
             if let value = snapshot.value as? Bool {
                 if value {
                     self.navigationControllers.append(self.reservationController)
+                    Database.database().reference().child("Apps").child(globalAppId).child("reservations").observe(DataEventType.childAdded) { snapshot in
+                        if let value = snapshot.value as? [String : Any] {
+                            let reservation = Reservation()
+                            reservation.status = value["status"] as? String
+                            if reservation.status == "pending" {
+                                self.reservationController.tabBarItem.badgeValue = "1"
+                            }
+                        }
+                    }
                     self.checkActionController()
                 } else {
                     self.checkActionController()

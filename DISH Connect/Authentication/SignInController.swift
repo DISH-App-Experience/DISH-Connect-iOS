@@ -20,7 +20,8 @@ class SignInController: UIViewController, UITextFieldDelegate {
     
     let signInLogo : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "signInLogo")
+        imageView.image = UIImage(named: "roundedIcon")
+        imageView.contentMode = UIView.ContentMode.scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
