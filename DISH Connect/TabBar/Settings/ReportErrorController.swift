@@ -15,6 +15,15 @@ class ReportErrorController: UIViewController, UITextFieldDelegate {
     
     // MARK: - View Objects
     
+    let scrollView : UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.backgroundColor = UIColor.clear
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
+    
     let largeImageView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -93,8 +102,15 @@ class ReportErrorController: UIViewController, UITextFieldDelegate {
     // MARK: - Private Functions
     
     private func constraints() {
-        view.addSubview(largeImageView)
-        largeImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
+        view.addSubview(scrollView)
+        scrollView.contentSize = CGSize(width: self.view.frame.size.width - 50, height: 900)
+        scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        scrollView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        scrollView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        scrollView.addSubview(largeImageView)
+        largeImageView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 30).isActive = true
         largeImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         largeImageView.widthAnchor.constraint(equalToConstant: 253).isActive = true
         largeImageView.heightAnchor.constraint(equalToConstant: 160).isActive = true
@@ -105,20 +121,20 @@ class ReportErrorController: UIViewController, UITextFieldDelegate {
         iconImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         iconImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
-        view.addSubview(textFieldDesc)
+        scrollView.addSubview(textFieldDesc)
         textFieldDesc.topAnchor.constraint(equalTo: largeImageView.bottomAnchor, constant: 25).isActive = true
         textFieldDesc.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         textFieldDesc.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         textFieldDesc.heightAnchor.constraint(equalToConstant: 28).isActive = true
         
-        view.addSubview(mainTextField)
+        scrollView.addSubview(mainTextField)
         mainTextField.becomeFirstResponder()
         mainTextField.topAnchor.constraint(equalTo: textFieldDesc.bottomAnchor, constant: 2).isActive = true
         mainTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         mainTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         mainTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        view.addSubview(mainButton)
+        scrollView.addSubview(mainButton)
         mainButton.topAnchor.constraint(equalTo: mainTextField.bottomAnchor, constant: 21).isActive = true
         mainButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         mainButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true

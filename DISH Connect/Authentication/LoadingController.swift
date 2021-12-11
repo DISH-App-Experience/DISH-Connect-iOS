@@ -15,10 +15,18 @@ class LoadingController: UIViewController {
     
     let signInLogo : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "landingPageLogo")!
+        imageView.image = UIImage(named: "roundedIcon")!
         imageView.contentMode = UIView.ContentMode.scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
+    }()
+    
+    let progressVirew : UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView()
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.style = .medium
+        spinner.isHidden = false
+        return spinner
     }()
 
     override func viewDidLoad() {
@@ -31,6 +39,12 @@ class LoadingController: UIViewController {
         signInLogo.widthAnchor.constraint(equalToConstant: 93).isActive = true
         signInLogo.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         signInLogo.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        view.addSubview(progressVirew)
+        progressVirew.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        progressVirew.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        progressVirew.topAnchor.constraint(equalTo: signInLogo.bottomAnchor, constant: 35).isActive = true
+        progressVirew.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
 
         // Do any additional setup after loading the view.
     }
@@ -44,7 +58,7 @@ class LoadingController: UIViewController {
     // MARK: - Private Functions
     
     private func autoSignIn() {
-        MBProgressHUD.showAdded(to: self.view, animated: true)
+        progressVirew.startAnimating()
         if let _ = Auth.auth().currentUser {
             print("active firebase user")
             goToTabBar()
@@ -58,7 +72,7 @@ class LoadingController: UIViewController {
         let controller = SignInController()
         controller.modalPresentationStyle = UIModalPresentationStyle.fullScreen
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
-            MBProgressHUD.hide(for: self.view, animated: true)
+            self.progressVirew.stopAnimating()
             self.present(controller, animated: true, completion: nil)
         }
     }
@@ -68,7 +82,7 @@ class LoadingController: UIViewController {
         controller.getAppId()
         controller.modalPresentationStyle = UIModalPresentationStyle.fullScreen
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-            MBProgressHUD.hide(for: self.view, animated: true)
+            self.progressVirew.stopAnimating()
             self.present(controller, animated: true, completion: nil)
         }
     }
