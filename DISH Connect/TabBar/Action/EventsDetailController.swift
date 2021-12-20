@@ -72,7 +72,6 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
         let textField = MainTextField(placeholderString: "Location")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -80,7 +79,6 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
         let textField = MainTextField(placeholderString: "Name")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -88,7 +86,6 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
         let textField = MainTextField(placeholderString: "Start")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.decimalPad
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -96,7 +93,6 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
         let textField = MainTextField(placeholderString: "End")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.decimalPad
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -104,7 +100,6 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
         let textField = MainTextField(placeholderString: "Description")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
