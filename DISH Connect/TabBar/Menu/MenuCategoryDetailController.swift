@@ -43,7 +43,6 @@ class MenuCategoryDetailController: UIViewController, UITextFieldDelegate {
         let textField = MainTextField(placeholderString: "Name of Category")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
