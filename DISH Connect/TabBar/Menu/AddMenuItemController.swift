@@ -71,7 +71,6 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
         let textField = MainTextField(placeholderString: "Category")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -79,7 +78,6 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
         let textField = MainTextField(placeholderString: "Title")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -87,7 +85,6 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
         let textField = MainTextField(placeholderString: "Price ($)")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.decimalPad
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -95,7 +92,6 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
         let textField = MainTextField(placeholderString: "Description")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
