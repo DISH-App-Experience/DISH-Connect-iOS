@@ -271,6 +271,7 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
                     self.users.append(user)
                 }
                 for user in self.users {
+                    print("sending notification to user: \(user.fcm)")
                     PushNotificationSender().sendPushNotification(to: user.fcm ?? "", title: self.cityTF.text! + "!", body: "Check the 'Promotions' tab in our app to find out more!")
                 }
             }
