@@ -42,7 +42,6 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
         let textField = MainTextField(placeholderString: "Code")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -50,7 +49,6 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
         let textField = MainTextField(placeholderString: "Name")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -58,7 +56,6 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
         let textField = MainTextField(placeholderString: "Valid until")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.decimalPad
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -66,7 +63,6 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
         let textField = MainTextField(placeholderString: "Description")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
