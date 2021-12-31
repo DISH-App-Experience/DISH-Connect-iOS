@@ -251,7 +251,7 @@ class LocationDetailController: UIViewController, UITextFieldDelegate, UIImagePi
     }
     
     private func addRemoveButton() {
-        view.addSubview(removeButton)
+        scrollView.addSubview(removeButton)
         removeButton.widthAnchor.constraint(equalToConstant: 203).isActive = true
         removeButton.heightAnchor.constraint(equalToConstant: 22).isActive = true
         removeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

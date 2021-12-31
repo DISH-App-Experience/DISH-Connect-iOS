@@ -42,7 +42,6 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
         let textField = MainTextField(placeholderString: "Code")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -50,7 +49,6 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
         let textField = MainTextField(placeholderString: "Name")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -58,7 +56,6 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
         let textField = MainTextField(placeholderString: "Valid until")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.decimalPad
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -66,7 +63,6 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
         let textField = MainTextField(placeholderString: "Description")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -263,15 +259,15 @@ class PromoDetailController: UIViewController, UITextFieldDelegate {
     }
     
     private func completion(isNew: Bool) {
+        print("completion thrown")
         if isNew {
+            print("isNew thrown")
             Database.database().reference().child("Apps").child(globalAppId).child("Users").observe(DataEventType.childAdded) { snapshot in
                 if let value = snapshot.value as? [String : Any] {
                     var user = Customer()
                     user.fcm = value["fcmToken"] as? String
-                    self.users.append(user)
-                }
-                for user in self.users {
                     PushNotificationSender().sendPushNotification(to: user.fcm ?? "", title: self.cityTF.text! + "!", body: "Check the 'Promotions' tab in our app to find out more!")
+                    self.users.append(user)
                 }
             }
             let alert = UIAlertController(title: "Success", message: "Added promotion", preferredStyle: UIAlertController.Style.alert)

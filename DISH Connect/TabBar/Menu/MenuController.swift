@@ -34,6 +34,8 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     var barItem : UIBarButtonItem?
     
+    var usesImages = true
+    
     // MARK: - View Objects
     
     let contentView : UIView = {
@@ -113,6 +115,8 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
 //        navigationItem.rightBarButtonItem = barItem
         navigationItem.backButtonTitle = "Back"
         navigationItem.title = "Menu"
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "photo.on.rectangle.angled"), style: UIBarButtonItem.Style.done, target: self, action: #selector(photoSettingsTapped))
     }
     
     override func updateViewConstraints() {
@@ -142,6 +146,7 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(MenuItemCell.self, forCellReuseIdentifier: MenuItemCell.identifier)
+        tableView.register(NoImageMenuItemCell.self, forCellReuseIdentifier: NoImageMenuItemCell.identifier)
         tableView.topAnchor.constraint(equalTo: categoryCollectionView!.bottomAnchor, constant: 27).isActive = true
         tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
@@ -155,8 +160,17 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
     // MARK: - Private Functions
     
     private func backend() {
-        checkCategories()
-        checkItems()
+        Database.database().reference().child("Apps").child(globalAppId).child("usesMenuImages").observeSingleEvent(of: DataEventType.value) { snapshot in
+            if let value = snapshot.value as? Bool {
+                self.usesImages = value
+                self.checkCategories()
+                self.checkItems()
+            } else {
+                self.usesImages = true
+                self.checkCategories()
+                self.checkItems()
+            }
+        }
     }
     
     private func floatingActionButton() {
@@ -284,6 +298,12 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
         }
     }
     
+    @objc func photoSettingsTapped() {
+        let controller = MenuItemPhotoSettingsController()
+        controller.modalPresentationStyle = .fullScreen
+        self.present(controller, animated: true, completion: nil)
+    }
+    
     // MARK: - UICollectionView Delegate & Data Source Functions
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -343,22 +363,18 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isOutsideAll {
             if otherCatItems.count == 0 {
-                print("nil")
                 showNilView()
                 MBProgressHUD.hide(for: self.view, animated: true)
             } else {
-                print("not nil")
                 hideNilView()
                 MBProgressHUD.hide(for: self.view, animated: true)
             }
             return otherCatItems.count
         } else {
             if items.count == 0 {
-                print("nil")
                 showNilView()
                 MBProgressHUD.hide(for: self.view, animated: true)
             } else {
-                print("not nil")
                 hideNilView()
                 MBProgressHUD.hide(for: self.view, animated: true)
             }
@@ -367,93 +383,122 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if isOutsideAll {
-            let cell = tableView.dequeueReusableCell(withIdentifier: MenuItemCell.identifier, for: indexPath) as! MenuItemCell
-            
-            if let imageUrl = otherCatItems[indexPath.row].image {
-                cell.itemImageView.loadImageUsingUrlString(urlString: imageUrl)
-            } else {
-                print("image view not able to define image")
-                cell.itemImageView.image = UIImage(named: "unknownItem")!
-            }
-            
-            if let title = otherCatItems[indexPath.row].title {
-                cell.itemTitleLabel.text = title
-            }
-            
-            if let desc = otherCatItems[indexPath.row].desc {
-                cell.itemDescLabel.text = desc
-            }
-            
-            if let price = otherCatItems[indexPath.row].price {
-                cell.itemPriceLabel.text = "$\(price)"
-            }
-            
-            if let category = otherCatItems[indexPath.row].category {
-                Database.database().reference().child("Apps").child(globalAppId).child("menu").child("categories").child(category).child("name").observe(DataEventType.value) { (snapshot) in
-                    if let value = snapshot.value as? String {
-                        cell.itemCatLabel.text = "(\(value))"
+        if usesImages {
+            if isOutsideAll {
+                let cell = tableView.dequeueReusableCell(withIdentifier: MenuItemCell.identifier, for: indexPath) as! MenuItemCell
+                
+                if let imageUrl = otherCatItems[indexPath.row].image {
+                    cell.itemImageView.loadImageUsingUrlString(urlString: imageUrl)
+                } else {
+                    print("image view not able to define image")
+                    cell.itemImageView.image = UIImage(named: "unknownItem")!
+                }
+                
+                if let title = otherCatItems[indexPath.row].title {
+                    cell.itemTitleLabel.text = title
+                }
+                
+                if let desc = otherCatItems[indexPath.row].desc {
+                    cell.itemDescLabel.text = desc
+                }
+                
+                if let price = otherCatItems[indexPath.row].price {
+                    cell.itemPriceLabel.text = "$\(price)"
+                }
+                
+                if let category = otherCatItems[indexPath.row].category {
+                    Database.database().reference().child("Apps").child(globalAppId).child("menu").child("categories").child(category).child("name").observe(DataEventType.value) { (snapshot) in
+                        if let value = snapshot.value as? String {
+                            cell.itemCatLabel.text = "(\(value))"
+                        }
                     }
                 }
+                
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: MenuItemCell.identifier, for: indexPath) as! MenuItemCell
+                
+                if let imageUrl = items[indexPath.row].image {
+                    cell.itemImageView.loadImageUsingUrlString(urlString: imageUrl)
+                } else {
+                    print("image view not able to define image")
+                    cell.itemImageView.image = UIImage(named: "unknownItem")!
+                }
+                
+                if let title = items[indexPath.row].title {
+                    cell.itemTitleLabel.text = title
+                }
+                
+                if let desc = items[indexPath.row].desc {
+                    cell.itemDescLabel.text = desc
+                }
+                
+                if let price = items[indexPath.row].price {
+                    cell.itemPriceLabel.text = "$\(price)"
+                }
+                
+                if let category = items[indexPath.row].category {
+                    Database.database().reference().child("Apps").child(globalAppId).child("menu").child("categories").child(category).child("name").observe(DataEventType.value) { (snapshot) in
+                        if let value = snapshot.value as? String {
+                            cell.itemCatLabel.text = "(\(value))"
+                        }
+                    }
+                }
+                
+                return cell
             }
-            
-            return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: MenuItemCell.identifier, for: indexPath) as! MenuItemCell
-            
-            if let imageUrl = items[indexPath.row].image {
-                cell.itemImageView.loadImageUsingUrlString(urlString: imageUrl)
-            } else {
-                print("image view not able to define image")
-                cell.itemImageView.image = UIImage(named: "unknownItem")!
-            }
-            
-            if let title = items[indexPath.row].title {
-                cell.itemTitleLabel.text = title
-            }
-            
-            if let desc = items[indexPath.row].desc {
-                cell.itemDescLabel.text = desc
-            }
-            
-            if let price = items[indexPath.row].price {
-                cell.itemPriceLabel.text = "$\(price)"
-            }
-            
-            if let category = items[indexPath.row].category {
-                Database.database().reference().child("Apps").child(globalAppId).child("menu").child("categories").child(category).child("name").observe(DataEventType.value) { (snapshot) in
-                    if let value = snapshot.value as? String {
-                        cell.itemCatLabel.text = "(\(value))"
+            if isOutsideAll {
+                let cell = tableView.dequeueReusableCell(withIdentifier: NoImageMenuItemCell.identifier, for: indexPath) as! NoImageMenuItemCell
+                
+                if let title = otherCatItems[indexPath.row].title {
+                    cell.itemTitleLabel.text = title
+                }
+                
+                if let desc = otherCatItems[indexPath.row].desc {
+                    cell.itemDescLabel.text = desc
+                }
+                
+                if let price = otherCatItems[indexPath.row].price {
+                    cell.itemPriceLabel.text = "$\(price)"
+                }
+                
+                if let category = otherCatItems[indexPath.row].category {
+                    Database.database().reference().child("Apps").child(globalAppId).child("menu").child("categories").child(category).child("name").observe(DataEventType.value) { (snapshot) in
+                        if let value = snapshot.value as? String {
+                            cell.itemCatLabel.text = "(\(value))"
+                        }
                     }
                 }
+                
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: NoImageMenuItemCell.identifier, for: indexPath) as! NoImageMenuItemCell
+                
+                if let title = items[indexPath.row].title {
+                    cell.itemTitleLabel.text = title
+                }
+                
+                if let desc = items[indexPath.row].desc {
+                    cell.itemDescLabel.text = desc
+                }
+                
+                if let price = items[indexPath.row].price {
+                    cell.itemPriceLabel.text = "$\(price)"
+                }
+                
+                if let category = items[indexPath.row].category {
+                    Database.database().reference().child("Apps").child(globalAppId).child("menu").child("categories").child(category).child("name").observe(DataEventType.value) { (snapshot) in
+                        if let value = snapshot.value as? String {
+                            cell.itemCatLabel.text = "(\(value))"
+                        }
+                    }
+                }
+                
+                return cell
             }
-            
-            return cell
         }
     }
-    
-//    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-//        return true
-//    }
-//
-//    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-//        let item = items[sourceIndexPath.row]
-//        let startIndex = sourceIndexPath.row
-//        let endIndex = destinationIndexPath.row
-//        let difference = (startIndex - endIndex)
-//
-//        items.remove(at: startIndex)
-//        items.insert(item, at: endIndex)
-//
-////        for item in items {
-////            if item.listorder < XXX {
-//////                Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(item.key!).child("listOrder").setValue(item.listorder! - 1)
-////            } else if item.listorder > XXX {
-//////                Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(item.key!).child("listOrder").setValue(item.listorder! - 1)
-////            }
-////        }
-////        Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(item.key!).child("listOrder").setValue(destinationIndexPath.row)
-//    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isOutsideAll {
@@ -472,7 +517,11 @@ class MenuController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 114
+        if usesImages {
+            return 114
+        } else {
+            return 83
+        }
     }
 
 }

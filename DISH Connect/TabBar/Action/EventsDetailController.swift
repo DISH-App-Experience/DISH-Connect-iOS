@@ -72,7 +72,6 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
         let textField = MainTextField(placeholderString: "Location")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -80,7 +79,6 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
         let textField = MainTextField(placeholderString: "Name")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -88,7 +86,6 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
         let textField = MainTextField(placeholderString: "Start")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.decimalPad
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -96,7 +93,6 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
         let textField = MainTextField(placeholderString: "End")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.decimalPad
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -104,7 +100,6 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
         let textField = MainTextField(placeholderString: "Description")
         textField.isSecureTextEntry = false
         textField.keyboardType = UIKeyboardType.default
-        textField.autocapitalizationType = UITextAutocapitalizationType.words
         return textField
     }()
     
@@ -374,14 +369,14 @@ class EventsDetailController: UIViewController, UITextFieldDelegate, UIImagePick
                 if let value = snapshot.value as? [String : Any] {
                     var user = Customer()
                     user.fcm = value["fcmToken"] as! String
-                    self.users.append(user)
-                }
-                if let datePicker = self.zipcodeTF.inputView as? UIDatePicker {
-                    let formatter = DateFormatter()
-                    formatter.dateFormat = "MMMM d"
-                    for user in self.users {
-                        PushNotificationSender().sendPushNotification(to: user.fcm!, title: self.cityTF.text! + "!", body: "What're you doing on \(formatter.string(from: datePicker.date))?")
+                    if let datePicker = self.zipcodeTF.inputView as? UIDatePicker {
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = "MMMM d"
+                        for user in self.users {
+                            PushNotificationSender().sendPushNotification(to: user.fcm!, title: self.cityTF.text! + "!", body: "What're you doing on \(formatter.string(from: datePicker.date))?")
+                        }
                     }
+                    self.users.append(user)
                 }
             }
             let alert = UIAlertController(title: "Success", message: "Added event", preferredStyle: UIAlertController.Style.alert)

@@ -75,6 +75,8 @@
 		78D82D1626C16E34001729AA /* NoConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D82D1526C16E34001729AA /* NoConnection.swift */; };
 		78DC5DA726C21CE7005AEE03 /* ScanHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DC5DA626C21CE7005AEE03 /* ScanHistoryCell.swift */; };
 		78DC5DA926C21D4D005AEE03 /* Scan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DC5DA826C21D4D005AEE03 /* Scan.swift */; };
+		78E92322277CA61B00608088 /* MenuItemPhotoSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E92321277CA61B00608088 /* MenuItemPhotoSettingsController.swift */; };
+		78E92324277EA8F800608088 /* NoImageMenuItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E92323277EA8F800608088 /* NoImageMenuItemCell.swift */; };
 		86C95E8B396B710AA3B28C52 /* Pods_DISH_ConnectTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9900A9248AF9BDD8BC9705BF /* Pods_DISH_ConnectTests.framework */; };
 		BE33FB3E237DA3E04926048E /* Pods_DISH_Connect_DISH_ConnectUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C1B589D9B14E51328207F3 /* Pods_DISH_Connect_DISH_ConnectUITests.framework */; };
 		D8C96BFE0533B3CDC58E8328 /* Pods_DISH_Connect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2347B18527669AA1793458B7 /* Pods_DISH_Connect.framework */; };
@@ -192,6 +194,8 @@
 		78D82D1526C16E34001729AA /* NoConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoConnection.swift; sourceTree = "<group>"; };
 		78DC5DA626C21CE7005AEE03 /* ScanHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanHistoryCell.swift; sourceTree = "<group>"; };
 		78DC5DA826C21D4D005AEE03 /* Scan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scan.swift; sourceTree = "<group>"; };
+		78E92321277CA61B00608088 /* MenuItemPhotoSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemPhotoSettingsController.swift; sourceTree = "<group>"; };
+		78E92323277EA8F800608088 /* NoImageMenuItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoImageMenuItemCell.swift; sourceTree = "<group>"; };
 		9900A9248AF9BDD8BC9705BF /* Pods_DISH_ConnectTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DISH_ConnectTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BF21548CFE03FBF71F2752D /* Pods-DISH Connect.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DISH Connect.debug.xcconfig"; path = "Target Support Files/Pods-DISH Connect/Pods-DISH Connect.debug.xcconfig"; sourceTree = "<group>"; };
 		A89F56696155FCFD07A6B0CD /* Pods-DISH ConnectTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DISH ConnectTests.release.xcconfig"; path = "Target Support Files/Pods-DISH ConnectTests/Pods-DISH ConnectTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -481,6 +485,7 @@
 			isa = PBXGroup;
 			children = (
 				783016FC2626EFB30030BA9F /* MenuController.swift */,
+				78E92321277CA61B00608088 /* MenuItemPhotoSettingsController.swift */,
 				783017262626FF6D0030BA9F /* MenuCategoryDetailController.swift */,
 				7830172B262705610030BA9F /* AddMenuItemController.swift */,
 				78C9B003262C472400F0B43A /* Cells */,
@@ -502,6 +507,7 @@
 			children = (
 				78C9AFFE262C471600F0B43A /* MenuItemCell.swift */,
 				7830173026273B010030BA9F /* MenuCategoryCell.swift */,
+				78E92323277EA8F800608088 /* NoImageMenuItemCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -805,6 +811,7 @@
 				780568D2261B42B4006ADEA9 /* OnboardingController2.swift in Sources */,
 				7828860E2638362F0025375A /* PromoDetailController.swift in Sources */,
 				7830173126273B010030BA9F /* MenuCategoryCell.swift in Sources */,
+				78E92322277CA61B00608088 /* MenuItemPhotoSettingsController.swift in Sources */,
 				78301620262485730030BA9F /* MainButton.swift in Sources */,
 				785F4DB426B02FFC0009D545 /* RequestProperty.swift in Sources */,
 				78DC5DA926C21D4D005AEE03 /* Scan.swift in Sources */,
@@ -818,6 +825,7 @@
 				78C9AFFF262C471600F0B43A /* MenuItemCell.swift in Sources */,
 				78301610262448210030BA9F /* ImageGalleryCell.swift in Sources */,
 				7875AD7526AF608000455584 /* PushNotificationSender.swift in Sources */,
+				78E92324277EA8F800608088 /* NoImageMenuItemCell.swift in Sources */,
 				782885EC2638022E0025375A /* EventObject.swift in Sources */,
 				78301625262485880030BA9F /* MainTextField.swift in Sources */,
 				78D340F0267D07A80007C373 /* CustomDayCell.swift in Sources */,
@@ -996,7 +1004,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "DISH Connect/DISH Connect.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = "DISH Connect/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1004,7 +1012,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.020000015;
+				MARKETING_VERSION = 1.020000016;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.DISH-Connect";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1021,7 +1029,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "DISH Connect/DISH Connect.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = "DISH Connect/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1029,7 +1037,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.020000015;
+				MARKETING_VERSION = 1.020000016;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.DISH-Connect";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
