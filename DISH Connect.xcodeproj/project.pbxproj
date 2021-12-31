@@ -68,6 +68,8 @@
 		785F4DB626B033140009D545 /* ViewReservationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785F4DB526B033140009D545 /* ViewReservationController.swift */; };
 		7875AD7526AF608000455584 /* PushNotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7875AD7426AF608000455584 /* PushNotificationSender.swift */; };
 		78937C97275452D900D0231D /* Analytic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78937C96275452D900D0231D /* Analytic.swift */; };
+		78B1D1AB277F868C00B7AFEF /* MenuItemPhotoSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B1D1AA277F868C00B7AFEF /* MenuItemPhotoSettingsController.swift */; };
+		78B1D1AD277F86B700B7AFEF /* NoImageMenuItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B1D1AC277F86B700B7AFEF /* NoImageMenuItemCell.swift */; };
 		78B20DC726BE23AD0015B4CC /* UIBarButtonItem+Badge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B20DC626BE23AD0015B4CC /* UIBarButtonItem+Badge.swift */; };
 		78C9AFFF262C471600F0B43A /* MenuItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C9AFFE262C471600F0B43A /* MenuItemCell.swift */; };
 		78C9B00B262C487400F0B43A /* MenuItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C9B00A262C487400F0B43A /* MenuItemModel.swift */; };
@@ -185,6 +187,8 @@
 		785F4DB526B033140009D545 /* ViewReservationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewReservationController.swift; sourceTree = "<group>"; };
 		7875AD7426AF608000455584 /* PushNotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationSender.swift; sourceTree = "<group>"; };
 		78937C96275452D900D0231D /* Analytic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytic.swift; sourceTree = "<group>"; };
+		78B1D1AA277F868C00B7AFEF /* MenuItemPhotoSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemPhotoSettingsController.swift; sourceTree = "<group>"; };
+		78B1D1AC277F86B700B7AFEF /* NoImageMenuItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoImageMenuItemCell.swift; sourceTree = "<group>"; };
 		78B20DC626BE23AD0015B4CC /* UIBarButtonItem+Badge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Badge.swift"; sourceTree = "<group>"; };
 		78C9AFFE262C471600F0B43A /* MenuItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemCell.swift; sourceTree = "<group>"; };
 		78C9B00A262C487400F0B43A /* MenuItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemModel.swift; sourceTree = "<group>"; };
@@ -483,6 +487,7 @@
 				783016FC2626EFB30030BA9F /* MenuController.swift */,
 				783017262626FF6D0030BA9F /* MenuCategoryDetailController.swift */,
 				7830172B262705610030BA9F /* AddMenuItemController.swift */,
+				78B1D1AA277F868C00B7AFEF /* MenuItemPhotoSettingsController.swift */,
 				78C9B003262C472400F0B43A /* Cells */,
 			);
 			path = Menu;
@@ -502,6 +507,7 @@
 			children = (
 				78C9AFFE262C471600F0B43A /* MenuItemCell.swift */,
 				7830173026273B010030BA9F /* MenuCategoryCell.swift */,
+				78B1D1AC277F86B700B7AFEF /* NoImageMenuItemCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -776,6 +782,7 @@
 				7805690D261B4A23006ADEA9 /* ReservationController.swift in Sources */,
 				785F4DAF26AF978F0009D545 /* ReservationsRequestsCell.swift in Sources */,
 				783016FD2626EFB30030BA9F /* MenuController.swift in Sources */,
+				78B1D1AB277F868C00B7AFEF /* MenuItemPhotoSettingsController.swift in Sources */,
 				78056903261B4A14006ADEA9 /* HomeController.swift in Sources */,
 				780568C1261B39C5006ADEA9 /* Extensions.swift in Sources */,
 				782885F626380C020025375A /* PromosCell.swift in Sources */,
@@ -818,6 +825,7 @@
 				78C9AFFF262C471600F0B43A /* MenuItemCell.swift in Sources */,
 				78301610262448210030BA9F /* ImageGalleryCell.swift in Sources */,
 				7875AD7526AF608000455584 /* PushNotificationSender.swift in Sources */,
+				78B1D1AD277F86B700B7AFEF /* NoImageMenuItemCell.swift in Sources */,
 				782885EC2638022E0025375A /* EventObject.swift in Sources */,
 				78301625262485880030BA9F /* MainTextField.swift in Sources */,
 				78D340F0267D07A80007C373 /* CustomDayCell.swift in Sources */,
