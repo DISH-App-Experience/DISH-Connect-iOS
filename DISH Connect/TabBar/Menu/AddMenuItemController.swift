@@ -40,6 +40,8 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
         }
     }
     
+    var iconURL = ""
+    
     var menuItemId : String? {
         didSet {
             backend(withItemID: menuItemId!)
@@ -134,6 +136,12 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
         super.viewDidLoad()
         
         view.backgroundColor = UIColor(named: "backgroundColor")!
+        
+        Database.database().reference().child("Apps").child(globalAppId).child("appIcon").observeSingleEvent(of: DataEventType.value) { snapshot in
+            if let value = snapshot.value as? String {
+                self.iconURL = value
+            }
+        }
         
         updateViewConstraints()
         delegates()
@@ -235,7 +243,9 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
         
         Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items").child(id).child("image").observe(DataEventType.value) { (snapshot) in
             if let value = snapshot.value as? String {
-                self.locationImage.loadImage(from: URL(string: value)!)
+                if value != "" {
+                    self.locationImage.loadImage(from: URL(string: value)!)
+                }
             }
         }
         
@@ -299,7 +309,7 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
     }
     
     private func addRemoveButton() {
-        view.addSubview(removeButton)
+        scrollView.addSubview(removeButton)
         removeButton.widthAnchor.constraint(equalToConstant: 203).isActive = true
         removeButton.heightAnchor.constraint(equalToConstant: 22).isActive = true
         removeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -327,7 +337,7 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
         }
     }
     
-    private func continueCompletion(withImageString imageString: String, key: String, isNew: Bool) {
+    private func continueCompletion(withImageString imageString: String?, key: String, isNew: Bool) {
         MBProgressHUD.showAdded(to: self.view, animated: true)
         // get a new
         if isNew {
@@ -339,7 +349,7 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                 "category" : String(self.selectedCategory!.key!),
                 "time" : Int(Date().timeIntervalSince1970),
                 "scanPrice" : Int(self.scanPriceTF.text!)!,
-                "image" : imageString,
+                "image" : imageString ?? self.iconURL,
             ]
             uploadNew(withValues: values, key: key)
         } else {
@@ -352,9 +362,8 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                         "description" : "\(self.stateTF.text!)",
                         "price" : Double(self.zipcodeTF.text!)!,
                         "category" : String(self.selectedCategory?.key ?? string),
-//                        "time" : Int(Date().timeIntervalSince1970),
                         "scanPrice" : Int(self.scanPriceTF.text!)!,
-                        "image" : imageString,
+                        "image" : imageString ?? self.iconURL,
                     ]
                     self.uploadExisting(withValues: values, key: self.menuItemId!)
                 }
@@ -403,29 +412,35 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
         MBProgressHUD.showAdded(to: view, animated: true)
         if action == "GET" {
             if streetAddressTF.text != "" && cityTF.text != "" && zipcodeTF.text != "" && stateTF.text != "" && scanPriceTF.text != "" {
-                // use key from fetched source
-                guard let imageData = locationImage.image!.jpegData(compressionQuality: 0.75) else { return }
-                let storageRef = Storage.storage().reference()
-                let metadata = StorageMetadata()
-                let root = Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items")
-                let key = root.childByAutoId().key
-                let storageProfileRef = storageRef.child(key!)
-                metadata.contentType = "image/jpg"
-                storageProfileRef.putData(imageData, metadata: metadata) { (storageMetadata, putDataError) in
-                    if putDataError == nil && storageMetadata != nil {
-                        storageProfileRef.downloadURL { (url, downloadUrlError) in
-                            if let metalImageUrl = url?.absoluteString {
-                                print("all good")
-                                self.continueCompletion(withImageString: metalImageUrl, key: key!, isNew: false)
-                            } else {
-                                MBProgressHUD.hide(for: self.view, animated: true)
-                                self.simpleAlert(title: "Error", message: downloadUrlError!.localizedDescription)
+                if locationImage.image != nil {
+                    // use key from fetched source
+                    guard let imageData = locationImage.image!.jpegData(compressionQuality: 0.75) else { return }
+                    let storageRef = Storage.storage().reference()
+                    let metadata = StorageMetadata()
+                    let root = Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items")
+                    let key = root.childByAutoId().key
+                    let storageProfileRef = storageRef.child(key!)
+                    metadata.contentType = "image/jpg"
+                    storageProfileRef.putData(imageData, metadata: metadata) { (storageMetadata, putDataError) in
+                        if putDataError == nil && storageMetadata != nil {
+                            storageProfileRef.downloadURL { (url, downloadUrlError) in
+                                if let metalImageUrl = url?.absoluteString {
+                                    print("all good")
+                                    self.continueCompletion(withImageString: metalImageUrl, key: key!, isNew: false)
+                                } else {
+                                    MBProgressHUD.hide(for: self.view, animated: true)
+                                    self.simpleAlert(title: "Error", message: downloadUrlError!.localizedDescription)
+                                }
                             }
+                        } else {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            self.simpleAlert(title: "Error", message: putDataError!.localizedDescription)
                         }
-                    } else {
-                        MBProgressHUD.hide(for: self.view, animated: true)
-                        self.simpleAlert(title: "Error", message: putDataError!.localizedDescription)
                     }
+                } else {
+                    let root = Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items")
+                    let key = root.childByAutoId().key
+                    self.continueCompletion(withImageString: nil, key: key!, isNew: false)
                 }
             } else {
                 MBProgressHUD.hide(for: self.view, animated: true)
@@ -433,7 +448,6 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
             }
         } else {
             if streetAddressTF.text != "" && cityTF.text != "" && zipcodeTF.text != "" && stateTF.text != "" && scanPriceTF.text != "" {
-                // image upload
                 if locationImage.image != nil {
                     guard let imageData = locationImage.image!.jpegData(compressionQuality: 0.75) else { return }
                     let storageRef = Storage.storage().reference()
@@ -459,8 +473,9 @@ class AddMenuItemController: UIViewController, UITextFieldDelegate, UIImagePicke
                         }
                     }
                 } else {
-                    MBProgressHUD.hide(for: self.view, animated: true)
-                    simpleAlert(title: "Error", message: "Please choose an image to continue")
+                    let root = Database.database().reference().child("Apps").child(globalAppId).child("menu").child("items")
+                    let key = root.childByAutoId().key
+                    self.continueCompletion(withImageString: nil, key: key!, isNew: true)
                 }
             } else {
                 MBProgressHUD.hide(for: self.view, animated: true)
